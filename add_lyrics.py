@@ -10,21 +10,16 @@ import lyricsgenius
 added_lyrics = 0
 not_added_lyrics = 0
 
-def add(successful, file=''):
-    global added_lyrics
-    global not_added_lyrics
+def add(successful):
+    global added_lyrics, not_added_lyrics
     if successful:
         added_lyrics += 1
     else:
         not_added_lyrics += 1
-        if file:
-            mv = f"mv \"{file}\" \"{without_lyrics_path}\""
-            if os.path.isfile(file) and not input(f"  CONFIRM: {mv} "):
-                os.system(mv)
 
 
 def get_lyrics(title, artist):
-    if manual_search:       # manual_search is a global variable, soooo not cool
+    if manual_search:       # manual_search is a global variable, so... not cool
         print(title, '-', artist)
         lyrics = genius.lyrics(input("  url: "))
     else:
@@ -53,7 +48,7 @@ def set_lyrics_mp3(file):
 
     except Exception:
         print(" X File Error: ", file)
-        add(False, file)
+        add(False)
         return
 
     try:
@@ -65,7 +60,7 @@ def set_lyrics_mp3(file):
 
     except Exception:
         print(" X Lyrics Error: ", file)
-        add(False, file)
+        add(False)
         return
 
 
@@ -90,7 +85,7 @@ def set_lyrics_m4a(file):
 
     except Exception:
         print(" X File Error: ", file)
-        add(False, file)
+        add(False)
         return
 
     try:
@@ -102,7 +97,7 @@ def set_lyrics_m4a(file):
 
     except Exception:
         print(" X Lyrics Error: ", file)
-        add(False, file)
+        add(False)
         return
 
 
@@ -179,46 +174,6 @@ def show_lyrics(path, files, txt=False):
         show_lyrics(path2, sorted(os.listdir(path2)), txt)
 
 
-## save lyrics in json file
-# def show_lyrics(path, files):
-#     folder = path.split('/')[-2]
-#     lyrics = {}
-#     files2 = []
-#     for file in files:
-#         file = path + file
-#         if os.path.isfile(file):
-
-#             try:
-#                 if file[-4:].lower() == ".mp3":
-#                     lyrics[file[len(path):-4]] = eyed3.load(file).tag.lyrics[0].text
-#                 elif file[-4:].lower() == ".m4a":
-#                     lyrics[file[len(path):-4]] = MP4(file).tags.get("\xa9lyr")[0]
-#             except Exception:
-#                 lyrics[file[len(path):-4]] = " X No Lyrics: " + file[len(path):]
-
-#         elif os.path.isdir(file):
-#             files2.append(file + '/')
-
-#     if os.path.isfile("/home/leli/Music/Lyrics/"+folder+" (Lyrics).json"):
-#         print(" Lyrics file already exists.")
-#     else:
-#         # with open("/home/leli/Music/Lyrics/"+folder+" (Lyrics).json", 'w') as lyricsfile:
-#         #     json.dump(lyrics, lyricsfile, sort_keys=True, indent=4)
-#         with open("/home/leli/Desktop/"+folder+" (Lyrics).json", 'w') as lyricsfile:
-#             json.dump(lyrics, lyricsfile, sort_keys=True, indent=3)
-
-#         print(" Lyrics file generated.")
-
-#     for path2 in files2:
-#         show_lyrics(path2, sorted(os.listdir(path2)))
-
-# def read_json(path):
-#     with open("/home/leli/Desktop/"+path.split('/')[-2]+" (Lyrics).json") as lyricsfile:
-#         lyrics = json.load(lyricsfile)
-#         print(lyrics.keys())
-#         print(lyrics["03 We Found Love_Rihanna (ft. Calvin Harris)"])
-
-
 def edit_lyrics(path, files, editor_path):
     files2 = []
     for file in files:
@@ -286,10 +241,6 @@ if __name__ == "__main__":
         songs_path = realpath + "/songs/"
         if not os.path.isdir(songs_path):
             os.mkdir(songs_path)
-
-    without_lyrics_path = realpath + "/without_lyrics/"
-    if not os.path.isdir(without_lyrics_path):
-        os.mkdir(without_lyrics_path)
 
     files = sorted(os.listdir(songs_path))
     if not files:
