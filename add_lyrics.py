@@ -24,12 +24,10 @@ def added(successful):
 def get_lyrics(title, artist):
     ## searching for the lyrics on genius using the title and artist name 
 
-    if manual_search:       # manual_search is a global variable, so... not cool
-        print(title, '-', artist)
-        lyrics = genius.lyrics(input("  url: "))
-    else:
-        lyrics = genius.search_song(title, artist, get_full_info=False).lyrics
-        # lyrics = genius.search_song(song_id=input("  id: "), get_full_info=False).lyrics
+    # print(title, '-', artist)
+    # lyrics = genius.lyrics(input("  url: "))
+    lyrics = genius.search_song(title, artist, get_full_info=False).lyrics
+    # lyrics = genius.search_song(song_id=input("  id: "), get_full_info=False).lyrics
     # lyrics = """"""
 
     ## formatting the lyrics
@@ -119,8 +117,8 @@ def set_lyrics(path, files):
     print(' ' + path + ' │', len(files))
     print('─'*len(path) + '──┘')
 
-    files2 = []
     i = 0
+    files2 = []
     for file in files:
         file = path + file
         if os.path.isfile(file):
@@ -161,47 +159,49 @@ def load_lyrics(file):
     return lyrics
 
 
-def read_lyrics(path, files, txt=False):
-    ## generating a text, containing lyrics of all the files in a directory
-    ## it calls the load_lyrics function for each file
+def read_lyrics(path, files, lyrics_path=''):
+    ## generating a text, containing lyrics of all the songs in a directory
+    ## it calls the load_lyrics function for each song
 
-    lyrics = ""
+    lyrics_file = lyrics_path
+    if not lyrics_file.strip():
+        lyrics_file = path
+
     folder = path.split('/')[-2]
-    lyrics += f"\n┌─{'─'*len(folder)}─┐\n│ {folder} │ {len(files)}\n└─{'─'*len(folder)}─┘\n"
-    files2 = []
+    lyrics_file += folder + " (Lyrics).txt"
+    lyrics = f"\n┌─{'─'*len(folder)}─┐\n│ {folder} │ {len(files)}\n└─{'─'*len(folder)}─┘\n"
 
-    for file in files:
-        file = path + file
-        if os.path.isfile(file):
-            lyrics += f"\n\n{'─'*120}\n\n  {file[len(path):-4]}\n\n\n"
-            lyrics += load_lyrics(file) + '\n'
-
-        elif os.path.isdir(file):
-            files2.append(file + '/')
-    lyrics += f"\n\n{'─'*120}\n"
-
-    ## saving the lyrics text in a file or just print it
-    if txt:
-        if os.path.isfile("/home/leli/Music/Lyrics/"+folder+" (Lyrics).txt"):       ## WORKS ON MY MACHINE ERROR
-            print(" X Lyrics file already exists:", folder)
-        else:
-            with open("/home/leli/Music/Lyrics/"+folder+" (Lyrics).txt", 'w') as lyricstxt:
-                # path+folder+" (Lyrics).txt"
-                lyricstxt.write(lyrics)
-            print(" Lyrics file generated:", folder)
+    if os.path.isfile(lyrics_file):
+        print(" X Lyrics file already exists:", folder)
     else:
-        print(lyrics)
+        ## looping through all of the files in this folder
+        files2 = []
+        for file in files:
+            file = path + file
+            if os.path.isfile(file):
+                lyrics += f"\n\n{'─'*120}\n\n  {file[len(path):-4]}\n\n\n"
+                lyrics += load_lyrics(file) + '\n'
 
-    ## calling the function again for the folders in this directory
+            elif os.path.isdir(file):
+                files2.append(file + '/')
+        lyrics += f"\n\n{'─'*120}\n"
+
+        ## saving the lyrics text in a file
+        with open(lyrics_file, 'w') as lyricstxt:
+            lyricstxt.write(lyrics)
+        print(" Lyrics file generated:", folder)
+        # print(lyrics)
+
+    ## calling the function again for folders in this directory
     ## each folder will generate a separate lyrics text
     for path2 in files2:
-        read_lyrics(path2, sorted(os.listdir(path2)), txt)
+        read_lyrics(path2, sorted(os.listdir(path2)), lyrics_path)
 
 
 def edit_lyrics(path, files, editor_path):
     ## writing lyrics in a text file so it can be edited manually
-    ## you need to open the text file at editor_path and edit the lyrics
-    ## after you are done, you can press enter in the terminal to save and move to the next file
+    ## you need to open the lyrics_editor.txt file and edit the lyrics
+    ## after you are done, you can press enter in the terminal to save and move to the next song
 
     files2 = []
     for file in files:
@@ -270,7 +270,7 @@ def search_lyrics(path, files):    ## deprecated
 if __name__ == "__main__":
 
     ## getting the songs and current path
-    songs_path = '/' + input("Enter path of your musics folder: ").strip(" \'\"/").replace("\'\\\'\'", '\'') + '/'
+    songs_path = '/' + input("\nEnter the path of your musics folder: ").strip(" \'\"/").replace("\'\\\'\'", '\'') + '/'
     realpath = os.path.realpath(__file__)  ##TODO: its not so efficient, mabye os.getcwd() was good enough
     realpath = realpath[:realpath.rindex('/')]
 
@@ -288,42 +288,36 @@ if __name__ == "__main__":
         raise SystemExit
 
 
-    sss = input(" 1.Set Lyrics (m)\n 2.Read Lyrics (t)\n 3.Search Lyrics\n 4.Edit Lyrics\n:")
+    sss = input("\n 1.Set lyrics\n 2.Create lyrics file\n 3.Edit lyrics\n 4.Search in lyrics\n:")
     print('\n')
 
-    ## 1  -> set lyrics automatically
-    ## 1m -> set lyrics by entering urls
-    if sss == '1' or sss == '1m':
-        manual_search = sss == '1m'
+    ## adding lyrics from genius to songs
+    if sss == '1':
         client_access_token = "JPmYaQ8e0nffrGMNZB-S2-5qxjAlVEb7YNtrGUG58PyCmy4jG5Z9pK2BN6kPZ6kW"
 
-        if manual_search:
-            genius = lyricsgenius.Genius(client_access_token, skip_non_songs=True)
-            # genius = lyricsgenius.Genius(client_access_token, skip_non_songs=True, excluded_terms=["(Live)"])
-        else:
-            genius = lyricsgenius.Genius(client_access_token, skip_non_songs=True, excluded_terms=["(Remix)", "(Live)"])
+        # genius = lyricsgenius.Genius(client_access_token, skip_non_songs=True)
+        genius = lyricsgenius.Genius(client_access_token, skip_non_songs=True, excluded_terms=["(Live)", "(Remix)"])
 
         set_lyrics(songs_path, files)
         print(f"\n\n\n successfuls: {added_lyrics} \n unsuccessfuls: {not_added_lyrics}")
 
-    ## printing the lyrics of all files in songs_path
+    ## generating a text file containing all of the lyrics
     elif sss == '2':
-        read_lyrics(songs_path, files)
+        ## empty lyrics_path will place each lyrics file next to its songs
+        lyrics_path = input("Where to save all lyrics files: ")  # "/home/leli/Music/Lyrics/"
+        print()
+        read_lyrics(songs_path, files, lyrics_path)
 
-    ## creating a text file containing all of the lyrics
-    elif sss == '2t':
-        read_lyrics(songs_path, files, True)
+    ## lyrics editor
+    elif sss == '3':
+        edit_lyrics(songs_path, files, realpath + "/lyrics_editor.txt")
 
     ## searching for a text in lyrics
-    elif sss == '3':
+    elif sss == '4':
         q = input(" q: ").lower()
         # if len(q) < 4:
         #     q = ''
         search_lyrics(songs_path, files)
-
-    ## lyrics editor
-    elif sss == '4':
-        edit_lyrics(songs_path, files, realpath + "/lyrics_editor.txt")
 
     ## just for checking
     elif sss == '5':
