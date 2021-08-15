@@ -15,7 +15,7 @@ def search_lyrics(path, files):
         if album[-4:].lower() != ".txt":
             continue
 
-        file = open(path + album, 'r')
+        file = open(path + album, 'r', encoding="utf-8")
         txt = file.read()
         ## separating each songs lyrics as elements of a list
         txt = txt.split('─' * 120)[1:-1]
@@ -31,8 +31,10 @@ def search_lyrics(path, files):
 
 if __name__ == "__main__":
     import os
+    import re
 
-    lyrics_path = input("\nEnter the path of your lyrics folder: ")
+    lyrics_path = input("\nEnter the path of your lyrics folder: ").replace('\\', '/')
+    lyrics_path = re.sub("/*$", '/', lyrics_path)
     lyrics_files = sorted(os.listdir(lyrics_path))
     print()
 
