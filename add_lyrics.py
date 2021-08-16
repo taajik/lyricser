@@ -3,7 +3,7 @@ import os
 import re
 import eyed3
 from mutagen.mp4 import MP4
-import lyricsgenius
+from lyricsgenius import Genius
 
 from search_lyrics import search_lyrics
 
@@ -24,13 +24,15 @@ def added(successful):
 
 
 def get_lyrics(title, artist):
-    ## searching for the lyrics on genius using the title and artist name
+    ## searching for the lyrics on Genius
 
-    # print(title, '-', artist)
-    # lyrics = genius.lyrics(input("  url: "))
-    lyrics = genius.search_song(title, artist, get_full_info=False).lyrics
-    # lyrics = genius.search_song(song_id=input("  id: "), get_full_info=False).lyrics
-    # lyrics = """"""
+    # genius = Genius(excluded_terms=["(Live)", "(Remix)"])
+    genius = Genius()
+
+    # lyrics = ""
+    # lyrics = genius.lyrics( input(title + ' - ' + artist + "\n  url: ") )        ## search by supplying the song url
+    # lyrics = genius.search_song(song_id= input("  id: "), get_full_info=False).lyrics        ## search by supplying the song id
+    lyrics = genius.search_song(title, artist, get_full_info=False).lyrics        ## search by reading song tags
 
     ## formatting the lyrics
     lyrics = re.sub("\n*\[", "\n\n[", lyrics)
@@ -280,13 +282,8 @@ if __name__ == "__main__":
     sss = input("\n 1.Set lyrics\n 2.Create lyrics file\n 3.Edit lyrics\n 4.Search in lyrics\n:")
     print('\n')
 
-    ## adding lyrics from genius to songs
+    ## searching for lyrics on Genius and adding them to songs
     if sss == '1':
-        client_access_token = "YOUR GENIUS ACCESS TOKEN"
-
-        # genius = lyricsgenius.Genius(client_access_token, skip_non_songs=True)
-        genius = lyricsgenius.Genius(client_access_token, skip_non_songs=True, excluded_terms=["(Live)", "(Remix)"])
-
         set_lyrics(origin_path, origin_files)
         print(f"\n\n\n successfuls: {added_lyrics} \n unsuccessfuls: {not_added_lyrics}")
 
