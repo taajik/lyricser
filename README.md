@@ -5,6 +5,7 @@
 ![Windows Support](https://img.shields.io/badge/Windows-Support-brightgreen.svg)
 
 
+> :construction: Work in progress!
 These scripts are for dealing with lyrics of songs. Automatically adding lyrics to songs, editing lyrics, reading lyrics and more. 
 
 
