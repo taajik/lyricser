@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     # Search for lyrics in 'Genius.com' and add them to songs.
     if choice == "2":
-        from .add_lyrics import set_lyrics
+        from add_lyrics import set_lyrics
         set_lyrics(origin_path, origin_files)
         utils.print_report("added", "not added")
 

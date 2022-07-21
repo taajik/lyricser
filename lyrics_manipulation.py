@@ -1,26 +1,8 @@
 
 import os
 
-import eyed3
-from mutagen.mp4 import MP4
-
+from song import Song
 from utils import report
-
-
-def load_lyrics(file):
-    """Return the lyrics of a song."""
-
-    try:
-        if file[-4:].lower() == ".mp3":
-            lyrics = eyed3.load(file).tag.lyrics[0].text
-        elif file[-4:].lower() == ".m4a":
-            lyrics = MP4(file).tags.get("\xa9lyr")[0]
-        else:
-            lyrics = " X Not supported file format"
-    except Exception:
-        lyrics = " X No Lyrics"
-
-    return lyrics
 
 
 def create_lyrics_file(path, files, lyrics_path=""):
@@ -43,11 +25,17 @@ def create_lyrics_file(path, files, lyrics_path=""):
         # Add the lyrics of every file in this folder to 'lyrics'.
         for file in files:
             file = path + file
+
             if os.path.isfile(file):
                 lyrics += f"\n\n{'─'*120}\n\n  {file[len(path):-4]}\n\n\n"
-                lyrics += load_lyrics(file) + "\n"
+                try:
+                    lyrics += Song(file).lyrics
+                except Exception as e:
+                    print(e)
+                lyrics += "\n"
             elif os.path.isdir(file):
                 inner_folders.append(file + "/")
+
         lyrics += "\n\n" + "─"*120 + "\n"
 
         # Save the lyrics text in a file.
@@ -75,7 +63,12 @@ def edit_lyrics(path, files):
         file = path + file
 
         if os.path.isfile(file):
-            lyrics = load_lyrics(file)
+            try:
+                song = Song(file)
+            except Exception as e:
+                print(e)
+                continue
+            lyrics = song.lyrics
 
             # Write the lyrics in the editor file.
             with open("lyrics_editor.txt", "w", encoding="utf-8") as lyricstxt:
@@ -90,14 +83,8 @@ def edit_lyrics(path, files):
                 lyrics = lyricstxt.read().strip()
 
             # Add the new lyrics to the song and save it.
-            if file[-4:].lower() == ".mp3":
-                tag = eyed3.load(file).tag
-                tag.lyrics.set(lyrics)
-                tag.save(version=eyed3.id3.ID3_V2_4, encoding="utf8")
-            elif file[-4:].lower() == ".m4a":
-                tag = MP4(file).tags
-                tag["\xa9lyr"] = lyrics
-                tag.save(file)
+            song.lyrics = lyrics
+            song.save()
 
         elif os.path.isdir(file):
             inner_folders.append(file + "/")
