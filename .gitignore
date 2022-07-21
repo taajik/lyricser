@@ -1,5 +1,11 @@
 # Project
 todo.txt
+songs/
+
+# Visual Studio
+.vscode/
+.history/
+*.code-workspace
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

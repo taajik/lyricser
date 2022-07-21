@@ -1,8 +1,7 @@
-
+# Unfinished!
 
 import os
 import eyed3
-
 
 
 def edit_tags_mp3(path, files, artist, album):
@@ -54,12 +53,7 @@ def edit_tags(path, files):
         edit_tags(path2, sorted(os.listdir(path2)))
 
 
-
-
-
-
 origin_path = "/home/leli/Desktop/EASY/TEMP/"
 origin_files = sorted(os.listdir(origin_path))
 
 edit_tags(origin_path, origin_files)
-
