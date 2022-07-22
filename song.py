@@ -27,6 +27,24 @@ class MP3Song:
         self.tags.album_artist = aa
 
     @property
+    def album(self):
+        return self.tags.album
+
+    @album.setter
+    def album(self, a):
+        self.tags.album = a
+
+    @property
+    def track_num(self):
+        return self.tags.track_num[0]
+
+    @track_num.setter
+    def track_num(self, tn):
+        if tn is not None:
+            tn = int(tn)
+        self.tags.track_num = tn
+
+    @property
     def lyrics(self):
         l = self.tags.lyrics
         if any(l):
@@ -71,12 +89,34 @@ class M4ASong:
         self.tags["aART"] = aa
 
     @property
+    def album(self):
+        return self._get_tag("\xa9alb")
+
+    @album.setter
+    def album(self, a):
+        self.tags["\xa9alb"] = a
+
+    @property
+    def track_num(self):
+        tn = self._get_tag("trkn")
+        if tn:
+            return tn[0]
+        return tn
+
+    @track_num.setter
+    def track_num(self, tn):
+        if tn is not None:
+            self.tags["trkn"] = [(int(tn), 0)]
+        else:
+            self.tags.pop("trkn", None)
+
+    @property
     def lyrics(self):
         return self._get_tag("\xa9lyr")
 
     @lyrics.setter
-    def lyrics(self, new_lyrics):
-        self.tags["\xa9lyr"] = new_lyrics
+    def lyrics(self, l):
+        self.tags["\xa9lyr"] = l
 
     def save(self):
         self.tags.save(self.path)
@@ -84,9 +124,10 @@ class M4ASong:
 
 class Song:
     def __new__(cls, path):
-        if path[-4:].lower() == ".mp3":
+        ext = path[-3:].lower()
+        if ext == "mp3":
             return MP3Song(path)
-        elif path[-4:].lower() == ".m4a":
+        elif ext == "m4a":
             return M4ASong(path)
         else:
             raise Exception(

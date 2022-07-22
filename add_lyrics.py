@@ -86,6 +86,6 @@ def set_lyrics(path, files):
         elif os.path.isdir(file):
             inner_folders.append(file + "/")
 
-    # Call the function recursively for the folders inside this one.
+    # Call the function again for folders inside this one.
     for inner_path in inner_folders:
         set_lyrics(inner_path, sorted(os.listdir(inner_path)))
