@@ -22,8 +22,9 @@ def get_lyrics(title, artist):
 
     # Format the lyrics
     lyrics = re.sub("\n*\[", "\n\n[", lyrics)
+    lyrics = re.sub("^.*\n", "", lyrics)
     lyrics = lyrics.replace("’", "'").strip()
-    lyrics = re.sub("[0-9]*EmbedShare URLCopyEmbedCopy$", "", lyrics)
+    lyrics = re.sub("\d*Embed$", "", lyrics)
 
     return lyrics
 

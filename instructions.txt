@@ -5,26 +5,36 @@ The input path:
     But if you want to search inside lyrics files, enter the path
     to the folder containing lyrics text files.
 
-1.Set lyrics:
+2.Auto regularize songs:
+    Set file name and some tags of songs.
+    The artist and folder names should either be provided manually
+    for each folder, or they can be gathered from the folder's name.
+    For that to work, the folder's name should be in one of these formats:
+    - for an album: "artist - album"
+    - for an artist's songs: "artist"
+    Tags that will be edited are: Title, Album Artist, Album & Track Number
+    Songs' file names will be composed using the title, artist, and track number.
+    for example: 02 clementine_Halsey.m4a
+
+3.Set lyrics:
     Lyrics will be searched for and added to all songs inside the entered folder
     and all folders inside it, recursively.
     After it's finished, you can see the number of successful
     and failed lyrics attachments.
 
-2.Create lyrics file:
-    for each folder inside the entered folder, a text file containing
-    lyrics of its songs will be generated.
-    You can provide a path for storing these text files. If you don't specify
-    one, each lyrics file will be placed in the folder next to its songs.
-
-3.Edit lyrics:
+4.Edit lyrics:
     One by one, the lyrics of the songs will be written down
     in the 'lyrics_editor.txt' file and you can edit them manually.
     You should open the file and edit the lyrics as you want.
     After you are done, save the file and press enter in the terminal
     to save the song and move to the next one.
 
-4.Search in lyrics:
+5.Create lyrics file:
+    for each folder inside the entered folder, a text file containing
+    lyrics of its songs will be generated.
+    You can provide a path for storing these text files. If you don't specify
+    one, each lyrics file will be placed in the folder next to its songs.
+
+6.Search in lyrics:
     The entered folder will be searched for lyrics files to search
     a phrase in all of them.
-
