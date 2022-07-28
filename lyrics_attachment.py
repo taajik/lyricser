@@ -29,7 +29,7 @@ def get_lyrics(title, artist):
     return lyrics
 
 
-def find_and_set_lyrics(file):
+def set_lyrics(file):
     """Find and set the lyrics of a song according to its title and artist."""
 
     # Load the mp3 file's tags.
@@ -66,7 +66,7 @@ def find_and_set_lyrics(file):
         report(False, " X Lyrics Error: " + file)
 
 
-def set_lyrics(path, files):
+def auto_add_lyrics(path, files):
     """Loop through the songs in one folder and add lyrics to them."""
 
     print("\n" + "─"*len(path) + "──┐")
@@ -81,7 +81,7 @@ def set_lyrics(path, files):
         if os.path.isfile(file):
             i += 1
             print("\n", i, end=": ")
-            find_and_set_lyrics(file)
+            set_lyrics(file)
 
         # if 'file' is a folder, store it to call the function on it later.
         elif os.path.isdir(file):
@@ -89,4 +89,4 @@ def set_lyrics(path, files):
 
     # Call the function again for folders inside this one.
     for inner_path in inner_folders:
-        set_lyrics(inner_path, sorted(os.listdir(inner_path)))
+        auto_add_lyrics(inner_path, sorted(os.listdir(inner_path)))

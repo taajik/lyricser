@@ -49,6 +49,8 @@ class MP3Song:
         l = self.tags.lyrics
         if any(l):
             return l[0].text
+        else:
+            return ""
 
     @lyrics.setter
     def lyrics(self, l):
@@ -112,7 +114,10 @@ class M4ASong:
 
     @property
     def lyrics(self):
-        return self._get_tag("\xa9lyr")
+        l = self._get_tag("\xa9lyr")
+        if l is None:
+            return ""
+        return l
 
     @lyrics.setter
     def lyrics(self, l):
