@@ -30,6 +30,12 @@ def print_report(suc_title, unsuc_title):
     )
 
 
+def print_header(path, files):
+    print("\n" + "─"*len(path) + "──┐")
+    print(" " + path + " │", len(files))
+    print("─"*len(path) + "──┘")
+
+
 
 def format_path(path):
     path = path.strip(" '\"").replace("'\\''", "'").replace("\\", "/") + "/"

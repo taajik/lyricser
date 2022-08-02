@@ -2,7 +2,7 @@
 import os
 
 from song import Song
-from utils import report
+from utils import report, print_header
 
 
 def create_lyrics_file(path, files, lyrics_path=""):
@@ -57,6 +57,7 @@ def edit_lyrics(path, files):
     read back the edited version to the song and save it.
     """
 
+    print_header(path, files)
     inner_folders = []
 
     for file in files:
