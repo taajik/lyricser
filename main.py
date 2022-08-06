@@ -41,6 +41,7 @@ if __name__ == "__main__":
             "Extract artist and album names "
             "from the folder's name? (Y or n): "
         ).lower()
+        print()
         auto_regularize(origin_path, origin_files, auto_names != "n")
         utils.print_report("modified", "not modified")
 
@@ -63,7 +64,12 @@ if __name__ == "__main__":
 
     # Search for a phrase in lyrics files.
     elif choice == "6":
-        search_lyrics(origin_path, origin_files)
+        q = input("Search phrase: ").lower()
+        print()
+        if len(q) < 3:
+            print(" X It's too short (three characters minimum)")
+        else:
+            search_lyrics(origin_path, origin_files, q)
 
     # Just for checking.
     elif choice == "0":

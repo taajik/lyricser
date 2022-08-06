@@ -95,31 +95,38 @@ def edit_lyrics(path, files):
         edit_lyrics(inner_path, sorted(os.listdir(inner_path)))
 
 
-def search_lyrics(path, files):
+def search_lyrics(path, files, q):
     """Search for a phrase in all of the lyrics files
     inside the entered folder.
 
     The results lists the song and file names that include the phrase.
     """
 
-    q = input("Search phrase: ").lower()
-    print()
-    if len(q) < 4:
-        print(" X It's too short (four characters minimum)")
-        return
+    inner_folders = []
 
-    for album in files:
-        if album[-4:].lower() != ".txt":
-            continue
+    for file_name in files:
+        file = path + file_name
 
-        file = open(path + album, "r", encoding="utf-8")
-        lyrics = file.read()
-        # Divide the full lyrics file into separate song lyrics.
-        lyrics = lyrics.split("─" * 120)[1:-1]
+        if os.path.isfile(file):
+            if file[-4:].lower() != ".txt":
+                continue
 
-        for song in lyrics:
-            if q in song.lower():
-                # For each match, print the song and file name
-                print(album, song.splitlines()[2])
+            file = open(file, "r", encoding="utf-8")
+            lyrics = file.read()
+            # Split the full lyrics file into separate song lyrics.
+            lyrics = lyrics.split("─" * 120)[1:-1]
 
-        file.close()
+            print(file_name)
+            for song in lyrics:
+                if q in song.lower():
+                    # For each match, print the song name
+                    print(song.splitlines()[2])
+            print()
+            file.close()
+
+        elif os.path.isdir(file):
+            inner_folders.append(file + "/")
+
+    # Call the function again for folders inside this one.
+    for inner_path in inner_folders:
+        search_lyrics(inner_path, sorted(os.listdir(inner_path)), q)
