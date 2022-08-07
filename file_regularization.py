@@ -1,8 +1,26 @@
 
 import os
+import re
 
 from song import Song
 from utils import report, print_header
+
+
+def get_file_name(song: Song):
+    """Make up the song's file name according to its tags."""
+
+    # Extract parentheses from the title.
+    title = song.title
+    parens = re.search(" \(.*\)", title)
+    if parens is not None:
+        parens = parens.group()
+        title = title.replace(parens, "")
+
+    new_file = (
+        f"{str(song.track_num or '  ').zfill(2)} "
+        f"{title}_{song.album_artist}{parens or ''}.{song.ext}"
+    )
+    return new_file.strip()
 
 
 def auto_regularize(path, files, auto_names=True):
@@ -19,8 +37,10 @@ def auto_regularize(path, files, auto_names=True):
         if len(folder) != 1:
             album = folder[1] + " - " + artist
     else:
-        artist = input(" artist: ").strip()
-        album = input(" album: ").strip()
+        artist = input(" artist: ")
+        album = input(" album: ")
+    artist = artist.strip()
+    album = album.strip()
 
     inner_folders = []
 
@@ -35,16 +55,15 @@ def auto_regularize(path, files, auto_names=True):
                 continue
 
             song.title = song.title.replace("’", "'").strip()
-            song.album_artist = artist
-            song.album = album
+            if artist:
+                song.album_artist = artist
+            if album:
+                song.album = album
             song.track_num = song.track_num     # Delete the total
             song.save()
 
             # Rename the song's file name.
-            new_file = (
-                f"{str(song.track_num or '  ').zfill(2)} "
-                f"{song.title}_{song.album_artist}.{song.ext}"
-            ).strip()
+            new_file = get_file_name(song)
             new_file_path = path + new_file
             if new_file_path != file_path:
                 os.rename(file_path, new_file_path)

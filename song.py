@@ -80,7 +80,7 @@ class M4ASong:
 
     @title.setter
     def title(self, t):
-        self.tags["\xa9nam"] = t
+        self.tags["\xa9nam"] = [t]
 
     @property
     def album_artist(self):
@@ -88,7 +88,7 @@ class M4ASong:
 
     @album_artist.setter
     def album_artist(self, aa):
-        self.tags["aART"] = aa
+        self.tags["aART"] = [aa]
 
     @property
     def album(self):
@@ -96,7 +96,7 @@ class M4ASong:
 
     @album.setter
     def album(self, a):
-        self.tags["\xa9alb"] = a
+        self.tags["\xa9alb"] = [a]
 
     @property
     def track_num(self):
@@ -121,7 +121,7 @@ class M4ASong:
 
     @lyrics.setter
     def lyrics(self, l):
-        self.tags["\xa9lyr"] = l
+        self.tags["\xa9lyr"] = [l]
 
     def save(self):
         self.tags.save(self.path)
