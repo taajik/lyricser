@@ -19,6 +19,16 @@ class MP3Song:
         self.tags.title = t
 
     @property
+    def artists(self):
+        return self.tags.artist
+
+    @artists.setter
+    def artists(self, a):
+        if isinstance(a, list):
+            a = ", ".join(a)
+        self.tags.artist = a
+
+    @property
     def album_artist(self):
         return self.tags.album_artist
 
@@ -81,6 +91,16 @@ class M4ASong:
     @title.setter
     def title(self, t):
         self.tags["\xa9nam"] = [t]
+
+    @property
+    def artists(self):
+        return self._get_tag("\xa9ART")
+
+    @artists.setter
+    def artists(self, a):
+        if isinstance(a, list):
+            a = ", ".join(a)
+        self.tags["\xa9ART"] = [a]
 
     @property
     def album_artist(self):

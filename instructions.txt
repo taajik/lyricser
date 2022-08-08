@@ -9,12 +9,15 @@ The input path:
     Set file name and some tags of songs.
     The artist and folder names should either be provided manually
     for each folder, or they can be gathered from the folder's name.
-    For that to work, the folder's name should be in one of these formats:
+    For that to work, the folder's name should be in one of these formats (without quotes):
     - for an album: "artist - album"
     - for an artist's songs: "artist"
     Tags that will be edited are: Title, Album Artist, Album & Track Number
     Songs' file names will be composed using the title, artist, and track number.
-    for example: 02 clementine_Halsey.m4a
+    If other collaborators of the song are listed
+    in the artist tag (separated by comma) you will be prompted
+    to choose how they should be included in the file name.
+    Example: 01 Under Pressure_Queen_David Bowie (Remastered 2011).mp3
 
 3.Set lyrics:
     Lyrics will be searched for and added to all songs inside the entered folder

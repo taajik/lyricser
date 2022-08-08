@@ -16,9 +16,20 @@ def get_file_name(song: Song):
         parens = parens.group()
         title = title.replace(parens, "")
 
+    # Find other artists from the 'artists' tag.
+    artists = song.artists.split(", ")
+    artists.remove(song.album_artist)
+    if artists:
+        print(" Collaborator artists found:", artists)
+        set_as_feat = input("  Set as featured? (Y or n): ").lower()
+        if set_as_feat != "n":
+            artists = " (ft. " + " & ".join(artists) + ")"
+        else:
+            artists = "_" + "_".join(artists)
+
     new_file = (
         f"{str(song.track_num or '  ').zfill(2)} "
-        f"{title}_{song.album_artist}{parens or ''}.{song.ext}"
+        f"{title}_{song.album_artist}{artists or ''}{parens or ''}.{song.ext}"
     )
     return new_file.strip()
 
@@ -39,6 +50,7 @@ def auto_regularize(path, files, auto_names=True):
     else:
         artist = input(" artist: ")
         album = input(" album: ")
+        print()
     artist = artist.strip()
     album = album.strip()
 
@@ -48,6 +60,7 @@ def auto_regularize(path, files, auto_names=True):
         file_path = path + file
 
         if os.path.isfile(file_path):
+            print(file)
             try:
                 song = Song(file_path)
             except Exception as e:
@@ -67,9 +80,10 @@ def auto_regularize(path, files, auto_names=True):
             new_file_path = path + new_file
             if new_file_path != file_path:
                 os.rename(file_path, new_file_path)
-                report(True, f"{file} => {new_file}")
+                report(True, new_file)
             else:
-                report(False, file)
+                report(False, "Same!")
+            print()
 
         elif os.path.isdir(file_path):
             inner_folders.append(file_path + "/")
