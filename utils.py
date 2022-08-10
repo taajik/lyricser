@@ -29,12 +29,14 @@ def print_report(suc_title, unsuc_title):
     )
 
 
-def print_header(path):
+def get_header(path, full_path=True):
     files_num = sum(file.is_file() for file in path.iterdir())
-    path = str(path)
-    print("\n" + "─"*len(path) + "──┐")
-    print(" " + path + " │", files_num)
-    print("─"*len(path) + "──┘")
+    title = path.name
+    if full_path:
+        title = str(path)
+    return (f"\n┌─{'─'*len(title)}─┐" +
+            f"\n│ {title} │ {files_num}" +
+            f"\n└─{'─'*len(title)}─┘")
 
 
 def format_path(path):
@@ -47,6 +49,7 @@ def is_valid_dir(path):
     if (path in ["", "/", "."]
         or not path.is_dir()
         or path.samefile("/")
+        or path.samefile(Path())
         or path.samefile(Path.home())):
         return False
     return True

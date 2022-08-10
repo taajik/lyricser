@@ -2,7 +2,7 @@
 import re
 
 from song import Song
-from utils import report, print_header
+from utils import report, get_header
 
 
 def get_file_name(song: Song):
@@ -37,7 +37,7 @@ def get_file_name(song: Song):
 def auto_regularize(path, auto_names=True):
     """Automatically edit file name and some tags of songs."""
 
-    print_header(path)
+    print(get_header(path))
     inner_folders = []
 
     if auto_names:
@@ -56,7 +56,6 @@ def auto_regularize(path, auto_names=True):
     album = album.strip()
 
     for file in path.iterdir():
-
         if file.is_file():
             print(file.name)
             try:

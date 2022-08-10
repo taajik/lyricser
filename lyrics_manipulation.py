@@ -1,69 +1,56 @@
 
-import os
-
 from song import Song
-from utils import report, print_header
+from utils import report, get_header
 
 
-def create_lyrics_file(path, files, lyrics_path=""):
+def create_lyrics_file(path, lyrics_path=""):
     """Generate a text containing lyrics of all the songs in a folder."""
 
-    lyrics_file = lyrics_path.strip()
-    if not lyrics_file or lyrics_file == "/":
-        lyrics_file = path
-
-    folder = path.split("/")[-2]
-    lyrics_file += folder + " (Lyrics).txt"
+    lyrics_file = path
+    if lyrics_path:
+        lyrics_file = lyrics_path
+    lyrics_file /= path.name + " (Lyrics).txt"
+    lyrics = get_header(path, full_path=False) + "\n"
     inner_folders = []
-    lyrics = (f"\n┌─{'─'*len(folder)}─┐" +
-              f"\n│ {folder} │ {len(files)}" +
-              f"\n└─{'─'*len(folder)}─┘\n")
 
-    if os.path.isfile(lyrics_file):
-        report(False, " X Lyrics file already exists: " + folder)
+    if lyrics_file.exists():
+        report(False, " X Lyrics file already exists: " + lyrics_file.name)
     else:
         # Add the lyrics of every file in this folder to 'lyrics'.
-        for file in files:
-            file = path + file
-
-            if os.path.isfile(file):
-                lyrics += f"\n\n{'─'*120}\n\n  {file[len(path):-4]}\n\n\n"
+        for file in sorted(path.iterdir()):
+            if file.is_file():
+                lyrics += f"\n\n{'─'*120}\n\n  {file.stem}\n\n\n"
                 try:
                     lyrics += Song(file).lyrics
                 except Exception as e:
                     print(e)
                 lyrics += "\n"
-            elif os.path.isdir(file):
-                inner_folders.append(file + "/")
+            elif file.is_dir():
+                inner_folders.append(file)
 
         lyrics += "\n\n" + "─"*120 + "\n"
-
         # Save the lyrics text in a file.
         with open(lyrics_file, "w", encoding="utf-8") as lyricstxt:
             lyricstxt.write(lyrics)
-        report(True, " Lyrics file generated: " + folder)
+        report(True, " Lyrics file generated: " + lyrics_file.name)
         # print(lyrics)
 
     # Call the function again for folders inside this one.
     # Each folder will generate a separate lyrics text.
     for inner_path in inner_folders:
-        create_lyrics_file(inner_path,
-                           sorted(os.listdir(inner_path)),
-                           lyrics_path)
+        create_lyrics_file(inner_path, lyrics_path)
 
 
-def edit_lyrics(path, files):
+def edit_lyrics(path):
     """Write the lyrics to a text file and then
     read back the edited version to the song and save it.
     """
 
-    print_header(path, files)
+    print(get_header(path))
     inner_folders = []
 
-    for file in files:
-        file = path + file
-
-        if os.path.isfile(file):
+    for file in sorted(path.iterdir()):
+        if file.is_file():
             try:
                 song = Song(file)
             except Exception as e:
@@ -76,7 +63,7 @@ def edit_lyrics(path, files):
                 lyricstxt.write(lyrics)
 
             # Wait until edits are confirmed.
-            if input(file.split("/")[-1] + " >< "):
+            if input(file.name + " >< "):
                 break
 
             # Read the edited lyrics from the editor file.
@@ -87,15 +74,15 @@ def edit_lyrics(path, files):
             song.lyrics = lyrics
             song.save()
 
-        elif os.path.isdir(file):
-            inner_folders.append(file + "/")
+        elif file.is_dir():
+            inner_folders.append(file)
 
     # Call the function again for folders inside this one.
     for inner_path in inner_folders:
-        edit_lyrics(inner_path, sorted(os.listdir(inner_path)))
+        edit_lyrics(inner_path)
 
 
-def search_lyrics(path, files, q):
+def search_lyrics(path, q):
     """Search for a phrase in all of the lyrics files
     inside the entered folder.
 
@@ -104,29 +91,24 @@ def search_lyrics(path, files, q):
 
     inner_folders = []
 
-    for file_name in files:
-        file = path + file_name
-
-        if os.path.isfile(file):
-            if file[-4:].lower() != ".txt":
+    for file in sorted(path.iterdir()):
+        if file.is_file():
+            if file.suffix.lower() != ".txt":
                 continue
 
-            file = open(file, "r", encoding="utf-8")
-            lyrics = file.read()
+            with open(file, "r", encoding="utf-8") as txt_file:
+                lyrics = txt_file.read()
             # Split the full lyrics file into separate song lyrics.
             lyrics = lyrics.split("─" * 120)[1:-1]
 
-            print(file_name)
             for song in lyrics:
                 if q in song.lower():
                     # For each match, print the song name
-                    print(song.splitlines()[2])
-            print()
-            file.close()
+                    print(file.name, song.splitlines()[2])
 
-        elif os.path.isdir(file):
-            inner_folders.append(file + "/")
+        elif file.is_dir():
+            inner_folders.append(file)
 
     # Call the function again for folders inside this one.
     for inner_path in inner_folders:
-        search_lyrics(inner_path, sorted(os.listdir(inner_path)), q)
+        search_lyrics(inner_path, q)

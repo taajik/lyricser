@@ -15,8 +15,8 @@ if __name__ == "__main__":
         "1.Help",
         "2.Auto regularize songs",
         "3.Set lyrics",
-        "4.Edit lyrics",
-        "5.Create lyrics files",
+        "4.Create lyrics files",
+        "5.Edit lyrics",
         "6.Search in lyrics",
         sep="\n ", end="",
     )
@@ -58,16 +58,19 @@ if __name__ == "__main__":
         auto_add_lyrics(origin_path)
         utils.print_report("added", "not added")
 
-    # Lyrics editor.
-    elif choice == "4":
-        edit_lyrics(origin_path)
-
     # For each folder, generate a text file containing all of its lyrics.
-    elif choice == "5":
+    elif choice == "4":
         lyrics_path = utils.format_path(input("Lyrics files save location: "))
         print()
-        create_lyrics_file(origin_path, lyrics_path)
+        if utils.is_valid_dir(lyrics_path):
+            create_lyrics_file(origin_path, lyrics_path)
+        else:
+            create_lyrics_file(origin_path)
         utils.print_report("created", "not created")
+
+    # Lyrics editor.
+    elif choice == "5":
+        edit_lyrics(origin_path)
 
     # Search for a phrase in lyrics files.
     elif choice == "6":

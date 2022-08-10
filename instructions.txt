@@ -25,18 +25,18 @@ The input path:
     After it's finished, you can see the number of successful
     and failed lyrics attachments.
 
-4.Edit lyrics:
+4.Create lyrics file:
+    for each folder inside the entered folder, a text file containing
+    lyrics of its songs will be generated.
+    You can provide a path for storing these text files. If you don't specify
+    one, each lyrics file will be placed in the folder next to its songs.
+
+5.Edit lyrics:
     One by one, the lyrics of the songs will be written down
     in the 'lyrics_editor.txt' file and you can edit them manually.
     You should open the file and edit the lyrics as you want.
     After you are done, save the file and press enter in the terminal
     to save the song and move to the next one.
-
-5.Create lyrics file:
-    for each folder inside the entered folder, a text file containing
-    lyrics of its songs will be generated.
-    You can provide a path for storing these text files. If you don't specify
-    one, each lyrics file will be placed in the folder next to its songs.
 
 6.Search in lyrics:
     The entered folder will be searched for lyrics files to search
