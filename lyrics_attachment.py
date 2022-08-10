@@ -31,7 +31,6 @@ def get_lyrics(title, artist):
 def set_lyrics(file):
     """Find and set the lyrics of a song according to its title and artist."""
 
-    # Load the mp3 file's tags.
     try:
         song = Song(file)
     except Exception as e:

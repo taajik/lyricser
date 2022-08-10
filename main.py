@@ -1,4 +1,6 @@
 
+from pathlib import Path
+
 from file_regularization import auto_regularize
 from lyrics_manipulation import (
     create_lyrics_file,
@@ -33,7 +35,13 @@ if __name__ == "__main__":
     except:
         raise SystemExit
     print("\n")
-    origin_path, origin_files = utils.setup(origin_path)
+    origin_path = utils.format_path(origin_path)
+    if (not origin_path.is_dir()
+            or origin_path.samefile("/")
+            or origin_path.samefile(Path.home())
+            or not next(origin_path.iterdir(), None)):
+        print("\n Invalid or empty path!\n")
+        raise SystemExit
 
     # Regularize songs' tags
     if choice == "2":
@@ -42,24 +50,24 @@ if __name__ == "__main__":
             "from the folder's name? (Y or n): "
         ).lower()
         print()
-        auto_regularize(origin_path, origin_files, auto_names != "n")
+        auto_regularize(origin_path, auto_names != "n")
         utils.print_report("modified", "not modified")
 
     # Search for lyrics in 'Genius.com' and add them to songs.
     elif choice == "3":
         from lyrics_attachment import auto_add_lyrics
-        auto_add_lyrics(origin_path, origin_files)
+        auto_add_lyrics(origin_path)
         utils.print_report("added", "not added")
 
     # Lyrics editor.
     elif choice == "4":
-        edit_lyrics(origin_path, origin_files)
+        edit_lyrics(origin_path)
 
     # For each folder, generate a text file containing all of its lyrics.
     elif choice == "5":
         lyrics_path = utils.format_path(input("Lyrics files save location: "))
         print()
-        create_lyrics_file(origin_path, origin_files, lyrics_path)
+        create_lyrics_file(origin_path, lyrics_path)
         utils.print_report("created", "not created")
 
     # Search for a phrase in lyrics files.
@@ -69,11 +77,10 @@ if __name__ == "__main__":
         if len(q) < 3:
             print(" X It's too short (three characters minimum)")
         else:
-            search_lyrics(origin_path, origin_files, q)
+            search_lyrics(origin_path, q)
 
     # Just for checking.
     elif choice == "0":
         print(origin_path)
-        print(origin_files)
 
     print()

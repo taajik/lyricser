@@ -29,7 +29,7 @@ def get_file_name(song: Song):
 
     new_file = (
         f"{str(song.track_num or '  ').zfill(2)} "
-        f"{title}_{song.album_artist}{artists or ''}{parens or ''}.{song.ext}"
+        f"{title}_{song.album_artist}{artists or ''}{parens or ''}.{song.format}"
     )
     return new_file.strip()
 

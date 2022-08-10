@@ -5,7 +5,7 @@ from mutagen.mp4 import MP4
 
 class MP3Song:
     def __init__(self, path) -> None:
-        self.ext = "mp3"
+        self.format = "mp3"
         self.path = path
         self.song = eyed3.load(path)
         self.tags = self.song.tag
@@ -72,7 +72,7 @@ class MP3Song:
 
 class M4ASong:
     def __init__(self, path) -> None:
-        self.ext = "m4a"
+        self.format = "m4a"
         self.path = path
         self.song = MP4(path)
         self.tags = self.song.tags
@@ -149,12 +149,12 @@ class M4ASong:
 
 class Song:
     def __new__(cls, path):
-        ext = path[-3:].lower()
-        if ext == "mp3":
+        ext = path.name.lower()
+        if ext == ".mp3":
             return MP3Song(path)
-        elif ext == "m4a":
+        elif ext == ".m4a":
             return M4ASong(path)
         else:
             raise Exception(
-                " X Not supported file format: " + path.split("/")[-1]
+                " X Not supported file format: " + path.name
             )

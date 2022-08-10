@@ -1,6 +1,5 @@
 
-import os
-import re
+from pathlib import Path
 
 
 # Number of
@@ -36,35 +35,7 @@ def print_header(path, files):
     print("─"*len(path) + "──┘")
 
 
-
 def format_path(path):
-    path = path.strip(" '\"").replace("'\\''", "'").replace("\\", "/") + "/"
-    path = re.sub("/+$", "/", path)
+    path = path.strip(" '\"").replace("'\\''", "'")
+    path = Path(path).expanduser().resolve()
     return path
-
-
-def setup(origin_path):
-    """Do basic checks and return the usable path
-    and list of files of the entered folder.
-    """
-
-    # TODO: it's not so efficient, maybe os.getcwd() was good enough.
-    realpath = os.path.realpath(__file__).replace("\\", "/")
-    realpath = realpath[:realpath.rindex("/")]
-
-    # If the input path is invalid,
-    # create a folder called 'songs' in the current path
-    # and use it as the 'origin_path'.
-    origin_path = format_path(origin_path)
-    if origin_path in ["/", "./", "//"] or not os.path.isdir(origin_path):
-        origin_path = realpath + "/songs/"
-        if not os.path.isdir(origin_path):
-            os.mkdir(origin_path)
-
-    # Get the list of all files in the 'origin_path'.
-    origin_files = sorted(os.listdir(origin_path))
-    if not origin_files:
-        print("\n This folder is empty!\n")
-        raise SystemExit
-
-    return origin_path, origin_files
