@@ -1,5 +1,4 @@
 
-import os
 import re
 
 from song import Song
@@ -11,6 +10,7 @@ def get_file_name(song: Song):
 
     # Extract parentheses from the title.
     title = song.title
+    title = re.sub(" ?/+ ?", " - ", title)
     parens = re.search(" \(.*\)", title)
     if parens is not None:
         parens = parens.group()
@@ -34,13 +34,14 @@ def get_file_name(song: Song):
     return new_file.strip()
 
 
-def auto_regularize(path, files, auto_names=True):
+def auto_regularize(path, auto_names=True):
     """Automatically edit file name and some tags of songs."""
 
-    print_header(path, files)
+    print_header(path)
+    inner_folders = []
 
     if auto_names:
-        folder = path.split("/")[-2].split(" - ")
+        folder = path.name.split(" - ")
         # If the folder consists of only one word,
         # it's used for both artist and album.
         artist = album = folder[0]
@@ -54,15 +55,12 @@ def auto_regularize(path, files, auto_names=True):
     artist = artist.strip()
     album = album.strip()
 
-    inner_folders = []
+    for file in path.iterdir():
 
-    for file in files:
-        file_path = path + file
-
-        if os.path.isfile(file_path):
-            print(file)
+        if file.is_file():
+            print(file.name)
             try:
-                song = Song(file_path)
+                song = Song(file)
             except Exception as e:
                 report(False, e)
                 continue
@@ -76,18 +74,17 @@ def auto_regularize(path, files, auto_names=True):
             song.save()
 
             # Rename the song's file name.
-            new_file = get_file_name(song)
-            new_file_path = path + new_file
-            if new_file_path != file_path:
-                os.rename(file_path, new_file_path)
-                report(True, new_file)
+            new_file = path / get_file_name(song)
+            if file.name != new_file.name:
+                file.replace(new_file)
+                report(True, new_file.name)
             else:
                 report(False, "Same!")
             print()
 
-        elif os.path.isdir(file_path):
-            inner_folders.append(file_path + "/")
+        elif file.is_dir():
+            inner_folders.append(file)
 
     # Call the function again for folders inside this one.
     for inner_path in inner_folders:
-        auto_regularize(inner_path, sorted(os.listdir(inner_path)), auto_names)
+        auto_regularize(inner_path, auto_names)

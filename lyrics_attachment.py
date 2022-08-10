@@ -1,5 +1,4 @@
 
-import os
 import re
 
 from lyricsgenius import Genius
@@ -10,6 +9,7 @@ from utils import report, print_header
 
 # genius = Genius(excluded_terms=["(Live)", "(Remix)"])
 genius = Genius()
+
 
 def get_lyrics(title, artist):
     """Searche for lyrics on Genius."""
@@ -64,26 +64,25 @@ def set_lyrics(file):
         report(False, " X Lyrics Error: " + file)
 
 
-def auto_add_lyrics(path, files):
+def auto_add_lyrics(path):
     """Loop through the songs in one folder and add lyrics to them."""
 
-    print_header(path, files)
+    print_header(path)
     inner_folders = []
 
     i = 0
-    for file in files:
-        file = path + file
+    for file in path.iterdir():
 
-        if os.path.isfile(file):
+        if file.is_file():
             i += 1
             print("\n" + str(i).rjust(3), end=". ")
             set_lyrics(file)
 
         # if 'file' is a folder, store it to call the function on it later.
-        elif os.path.isdir(file):
-            inner_folders.append(file + "/")
+        elif file.is_dir():
+            inner_folders.append(file)
     print()
 
     # Call the function again for folders inside this one.
     for inner_path in inner_folders:
-        auto_add_lyrics(inner_path, sorted(os.listdir(inner_path)))
+        auto_add_lyrics(inner_path)

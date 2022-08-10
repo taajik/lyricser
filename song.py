@@ -149,7 +149,7 @@ class M4ASong:
 
 class Song:
     def __new__(cls, path):
-        ext = path.name.lower()
+        ext = path.suffix.lower()
         if ext == ".mp3":
             return MP3Song(path)
         elif ext == ".m4a":

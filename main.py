@@ -1,6 +1,4 @@
 
-from pathlib import Path
-
 from file_regularization import auto_regularize
 from lyrics_manipulation import (
     create_lyrics_file,
@@ -36,11 +34,12 @@ if __name__ == "__main__":
         raise SystemExit
     print("\n")
     origin_path = utils.format_path(origin_path)
-    if (not origin_path.is_dir()
-            or origin_path.samefile("/")
-            or origin_path.samefile(Path.home())
-            or not next(origin_path.iterdir(), None)):
-        print("\n Invalid or empty path!\n")
+
+    if not utils.is_valid_dir(origin_path):
+        print("\n Invalid path!\n")
+        raise SystemExit
+    if not next(origin_path.iterdir(), None):
+        print("\n This folder is empty!\n")
         raise SystemExit
 
     # Regularize songs' tags
