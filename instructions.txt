@@ -22,6 +22,8 @@ The input path:
 3.Set lyrics:
     Lyrics will be searched for and added to all songs inside the entered folder
     and all folders inside it, recursively.
+    If you verify that each folder contains an album, the name of a folder will be
+    used to search for the album in Genius; but it should be in this format: "artist - album"
     After it's finished, you can see the number of successful
     and failed lyrics attachments.
 

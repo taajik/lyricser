@@ -1,5 +1,8 @@
 
+from lyricsgenius import Genius
+
 from file_regularization import auto_regularize
+from lyrics_attachment import auto_add_lyrics
 from lyrics_manipulation import (
     create_lyrics_file,
     edit_lyrics,
@@ -49,13 +52,16 @@ if __name__ == "__main__":
             "from the folder's name? (Y or n): "
         ).lower()
         print()
-        auto_regularize(origin_path, auto_names != "n")
+        auto_regularize(origin_path, auto_names!="n")
         utils.print_report("modified", "not modified")
 
     # Search for lyrics in 'Genius.com' and add them to songs.
     elif choice == "3":
-        from lyrics_attachment import auto_add_lyrics
-        auto_add_lyrics(origin_path)
+        is_album = input("Is each folder an album? (Y or n): ").lower()
+        print()
+        # genius = Genius(excluded_terms=["(Live)", "(Remix)"])
+        genius = Genius()
+        auto_add_lyrics(origin_path, genius, is_album!="n")
         utils.print_report("added", "not added")
 
     # For each folder, generate a text file containing all of its lyrics.

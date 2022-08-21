@@ -83,6 +83,7 @@ def auto_regularize(path, auto_names=True):
 
         elif file.is_dir():
             inner_folders.append(file)
+    print()
 
     # Call the function again for folders inside this one.
     for inner_path in inner_folders:
