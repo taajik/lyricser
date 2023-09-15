@@ -18,7 +18,7 @@ def get_file_name(song: Song):
 
     # Find other artists from the 'artists' tag.
     artists = song.artists.split(", ")
-    artists.remove(song.album_artist)
+    artists.remove(song.album_artist)   # BUG: what if album_artist is not listed in artists (or is spelled differently)
     if artists:
         print(" Collaborator artists found:", artists)
         set_as_feat = input("  Set as featured? (Y or n): ").lower()
@@ -34,7 +34,7 @@ def get_file_name(song: Song):
     return new_file.strip()
 
 
-def auto_regularize(path, auto_names=True):
+def auto_regularize(path, auto_names=False):
     """Automatically edit file name and some tags of songs."""
 
     print(get_header(path))
@@ -69,7 +69,7 @@ def auto_regularize(path, auto_names=True):
                 song.album_artist = artist
             if album:
                 song.album = album
-            song.track_num = song.track_num     # Delete the total
+            song.track_num = song.track_num     # Delete the total tag
             song.save()
 
             # Rename the song's file name.

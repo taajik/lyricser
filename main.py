@@ -1,4 +1,6 @@
 
+import argparse
+
 from lyricsgenius import Genius
 
 from file_regularization import auto_regularize
@@ -11,7 +13,34 @@ from lyrics_manipulation import (
 import utils
 
 
+parser = argparse.ArgumentParser(description="Edit and add lyrics to your songs.")
+subparsers = parser.add_subparsers(title="Commands", dest="command", metavar="")
+
+def add_common_arguments(parser):
+    parser.add_argument("-r", "--recursive", action="store_true",
+                        help="recursive files search from provided root path")
+    parser.add_argument("path", type=str)
+
+regularize_parser = subparsers.add_parser("regularize", help="Auto regularize songs")
+add_common_arguments(regularize_parser)
+
+set_parser = subparsers.add_parser("set", help="Set lyrics on songs")
+add_common_arguments(set_parser)
+
+create_parser = subparsers.add_parser("create", help="Create lyrics files from lyrics of songs")
+add_common_arguments(create_parser)
+
+edit_parser = subparsers.add_parser("edit", help="Edit lyrics of songs")
+add_common_arguments(edit_parser)
+
+search_parser = subparsers.add_parser("search", help="Search inside all lyrics files")
+add_common_arguments(search_parser)
+
+
 if __name__ == "__main__":
+
+    args = parser.parse_args()
+    print(args)
 
     print(
         "",
@@ -23,11 +52,13 @@ if __name__ == "__main__":
         "6.Search in lyrics",
         sep="\n ", end="",
     )
-    choice = input("\n:")
+    #choice = input("\n:")
+
+    raise SystemExit
 
     # Print help without asking for path to the folder.
     if choice == "1":
-        with open("instructions.txt", "r") as instructions:
+        with open("instructions.txt") as instructions:
             print(instructions.read())
         raise SystemExit
 
