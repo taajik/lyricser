@@ -34,7 +34,7 @@ def get_file_name(song: Song):
     return new_file.strip()
 
 
-def auto_regularize(path, auto_names=False):
+def auto_regularize(path, recursive=False, auto_names=False, rename=True):
     """Automatically edit file name and some tags of songs."""
 
     print(get_header(path))
@@ -73,12 +73,15 @@ def auto_regularize(path, auto_names=False):
             song.save()
 
             # Rename the song's file name.
-            new_file = path / get_file_name(song)
-            if file.name != new_file.name:
-                file.replace(new_file)
-                report(True, new_file.name)
+            if rename:
+                new_file = path / get_file_name(song)
+                if file.name != new_file.name:
+                    file.replace(new_file)
+                    report(True, new_file.name)
+                else:
+                    report(False, "Same!")
             else:
-                report(False, "Same!")
+                report(True)
             print()
 
         elif file.is_dir():
@@ -86,5 +89,6 @@ def auto_regularize(path, auto_names=False):
     print()
 
     # Call the function again for folders inside this one.
-    for inner_path in inner_folders:
-        auto_regularize(inner_path, auto_names)
+    if recursive:
+        for inner_path in inner_folders:
+            auto_regularize(inner_path, recursive, auto_names, rename)
