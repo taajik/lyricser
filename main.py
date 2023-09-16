@@ -1,7 +1,7 @@
 
 import argparse
 
-#from lyricsgenius import Genius
+from lyricsgenius import Genius
 
 from file_regularization import auto_regularize
 from lyrics_attachment import auto_add_lyrics
@@ -23,11 +23,12 @@ def add_common_arguments(parser):
 
 regularize_parser = subparsers.add_parser("regular", help="Auto regularize songs")
 add_common_arguments(regularize_parser)
-regularize_parser.add_argument("-a", "--auto-names", action="store_true", help="Extract artist and album names from the folder's name")
-regularize_parser.add_argument("-n", "--no-rename", action="store_false", dest="rename", help="Don't change songs' file names (only edit tags)")
+regularize_parser.add_argument("-a", "--auto-names", action="store_true", help="extract artist and album names from the folder's name")
+regularize_parser.add_argument("-n", "--no-rename", action="store_false", dest="rename", help="do not change songs' file names (only edit tags)")
 
-set_parser = subparsers.add_parser("set", help="Set lyrics on songs")
+set_parser = subparsers.add_parser("set", help="Add lyrics to songs")
 add_common_arguments(set_parser)
+set_parser.add_argument("-i", "--is-album", action="store_true", help="consider all songs in a folder as an album")
 
 create_parser = subparsers.add_parser("create", help="Create lyrics files from lyrics of songs")
 add_common_arguments(create_parser)
@@ -42,7 +43,7 @@ add_common_arguments(search_parser)
 if __name__ == "__main__":
 
     args = parser.parse_args()
-    #print(args)
+    # print(args)
 
     # Print help if the program is run without any arguments.
     if args.command is None:
@@ -65,11 +66,9 @@ if __name__ == "__main__":
 
     # Search for lyrics in 'Genius.com' and add them to songs.
     elif args.command == "set":
-        is_album = input("Is each folder an album? (Y or n): ").lower()
-        print()
         # genius = Genius(excluded_terms=["(Live)", "(Remix)"])
-        genius = Genius()
-        auto_add_lyrics(origin_path, genius, is_album!="n")
+        genius = Genius("")
+        album = auto_add_lyrics(origin_path, genius, args.recursive, args.is_album)
         utils.print_report("added", "not added")
 
     # For each folder, generate a text file containing all of its lyrics.

@@ -32,7 +32,7 @@ def get_song_lyrics(t, aa, genius):
         aa = input("  artist: ")
 
     try:
-        # lyrics = genius.lyrics( input(t + " - " + aa + "\n  url: ") )
+        # lyrics = genius.lyrics( input(f"{t} - {aa}\n  url: ") )
         lyrics = genius.search_song(t, aa, get_full_info=False).lyrics
     except KeyboardInterrupt:
         raise SystemExit
@@ -40,7 +40,7 @@ def get_song_lyrics(t, aa, genius):
     return lyrics
 
 
-def auto_add_lyrics(path, genius, is_album=False):
+def auto_add_lyrics(path, genius, recursive=False, is_album=False):
     """Loop through the songs in one folder and add lyrics to them."""
 
     print(get_header(path))
@@ -85,8 +85,7 @@ def auto_add_lyrics(path, genius, is_album=False):
                 song.lyrics = lyrics
                 song.save()
                 report(True)
-                if is_album:
-                    print("Done.")
+                if is_album: print("Done.")
             except Exception:
                 report(False, " X Lyrics Error: " + file.name)
 
@@ -96,5 +95,6 @@ def auto_add_lyrics(path, genius, is_album=False):
     print()
 
     # Call the function again for folders inside this one.
-    for inner_path in inner_folders:
-        auto_add_lyrics(inner_path, genius, is_album)
+    if recursive:
+        for inner_path in inner_folders:
+            auto_add_lyrics(inner_path, genius, recursive, is_album)

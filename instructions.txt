@@ -20,7 +20,7 @@ The input path:
     Example: 01 Under Pressure_Queen_David Bowie (Remastered 2011).mp3
 
 3.Set lyrics:
-    Lyrics will be searched for and added to all songs inside the entered folder
+    Lyrics will be searched for and added to all songs inside the specified folder
     and all folders inside it, recursively.
     If you verify that each folder contains an album, the name of a folder will be
     used to search for the album in Genius; but it should be in this format: "artist - album"
@@ -28,7 +28,7 @@ The input path:
     and failed lyrics attachments.
 
 4.Create lyrics file:
-    for each folder inside the entered folder, a text file containing
+    for each folder inside the specified folder, a text file containing
     lyrics of its songs will be generated.
     You can provide a path for storing these text files. If you don't specify
     one, each lyrics file will be placed in the folder next to its songs.
@@ -41,5 +41,5 @@ The input path:
     to save the song and move to the next one.
 
 6.Search in lyrics:
-    The entered folder will be searched for lyrics files to search
+    The specified folder will be searched for lyrics files to search
     a phrase in all of them.
