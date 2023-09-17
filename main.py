@@ -1,5 +1,6 @@
 
 import argparse
+import os
 
 from lyricsgenius import Genius
 
@@ -53,10 +54,10 @@ if __name__ == "__main__":
     assert hasattr(args, "path"), "path argument is required"
     origin_path = utils.format_path(args.path)
     if not utils.is_valid_dir(origin_path):
-        print("Error: Invalid path!")
+        print(" X Error: Invalid path!")
         raise SystemExit
     if not next(origin_path.iterdir(), None):
-        print("Error: The folder is empty!")
+        print(" X Error: The folder is empty!")
         raise SystemExit
 
     # Regularize songs' tags and filename
@@ -67,7 +68,7 @@ if __name__ == "__main__":
     # Search for lyrics in 'Genius.com' and add them to songs.
     elif args.command == "set":
         # genius = Genius(excluded_terms=["(Live)", "(Remix)"])
-        genius = Genius("")
+        genius = Genius(os.environ.get("API_TOKEN"), verbose=False)
         album = auto_add_lyrics(origin_path, genius, args.recursive, args.is_album)
         utils.print_report("added", "not added")
 
@@ -93,9 +94,5 @@ if __name__ == "__main__":
             print(" X It's too short (three characters minimum)")
         else:
             search_lyrics(origin_path, q)
-
-    # Just for checking.
-    elif choice == "0":
-        print(origin_path)
 
     print()

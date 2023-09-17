@@ -13,7 +13,6 @@ def format_lyrics(lyrics: str):
     lyrics = re.sub("^.*\n", "", lyrics)
     lyrics = lyrics.replace("’", "'").replace(" ", " ").strip()
     lyrics = re.sub("\d*Embed$", "", lyrics)
-
     return lyrics
 
 
@@ -49,9 +48,9 @@ def auto_add_lyrics(path, genius, recursive=False, is_album=False):
     if is_album:
         folder = path.name.split(" - ")
         if len(folder) == 2:
-            folder.reverse()
             try:
-                album = genius.search_album(*folder, get_full_info=False)
+                print(" Searching for album lyrics...")
+                album = genius.search_album(folder[1], folder[0], get_full_info=False)
             except KeyboardInterrupt:
                 raise SystemExit
 
@@ -68,26 +67,26 @@ def auto_add_lyrics(path, genius, recursive=False, is_album=False):
                 return
             t = song.title
             aa = song.album_artist
+            print(f'"{t}" by {aa}')
 
             # Get the lyrics of this song.
-            if is_album:
-                try:
-                    lyrics = album.songs[i-1].lyrics
-                    print(f'"{t}" by {aa}')
-                except Exception:
-                    lyrics = ""
-            else:
-                lyrics = get_song_lyrics(t, aa, genius)
+            try:
+                if is_album:
+                    lyrics = album.tracks[i-1].song.lyrics
+                else:
+                    lyrics = get_song_lyrics(t, aa, genius)
+            except Exception as e:
+                report(False, f" X Lyrics Error: {e}")
+                continue
             lyrics = format_lyrics(lyrics)
 
             # Set the lyrics and save the file.
             try:
                 song.lyrics = lyrics
                 song.save()
-                report(True)
-                if is_album: print("Done.")
+                report(True, "Done.")
             except Exception:
-                report(False, " X Lyrics Error: " + file.name)
+                report(False, " X Lyrics Error.")
 
         # if 'file' is a folder, store it to call the function on it later.
         elif file.is_dir():
