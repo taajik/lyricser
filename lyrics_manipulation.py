@@ -3,7 +3,7 @@ from song import Song
 from utils import report, get_header
 
 
-def create_lyrics_file(path, lyrics_path=""):
+def create_lyrics_file(path, lyrics_path=None, recursive=False):
     """Generate a text containing lyrics of all the songs in a folder."""
 
     lyrics_file = path
@@ -37,8 +37,9 @@ def create_lyrics_file(path, lyrics_path=""):
 
     # Call the function again for folders inside this one.
     # Each folder will generate a separate lyrics text.
-    for inner_path in inner_folders:
-        create_lyrics_file(inner_path, lyrics_path)
+    if recursive:
+        for inner_path in inner_folders:
+            create_lyrics_file(inner_path, lyrics_path)
 
 
 def edit_lyrics(path):

@@ -33,6 +33,7 @@ set_parser.add_argument("-i", "--is-album", action="store_true", help="consider 
 
 create_parser = subparsers.add_parser("create", help="Create lyrics files from lyrics of songs")
 add_common_arguments(create_parser)
+create_parser.add_argument("-o", "--output-path", dest="lyrics_path", help="store location of lyrics files")
 
 edit_parser = subparsers.add_parser("edit", help="Edit lyrics of songs")
 add_common_arguments(edit_parser)
@@ -74,12 +75,13 @@ if __name__ == "__main__":
 
     # For each folder, generate a text file containing all of its lyrics.
     elif args.command == "create":
-        lyrics_path = utils.format_path(input("Lyrics files save location: "))
-        print()
-        if utils.is_valid_dir(lyrics_path):
-            create_lyrics_file(origin_path, lyrics_path)
-        else:
-            create_lyrics_file(origin_path)
+        lyrics_path = None
+        if args.lyrics_path is not None:
+            lyrics_path = utils.format_path(args.lyrics_path)
+            if not utils.is_valid_dir(lyrics_path):
+                print(" X Error: Invalid lyrics path!")
+                raise SystemExit
+        create_lyrics_file(origin_path, lyrics_path, args.recursive)
         utils.print_report("created", "not created")
 
     # Songs' lyrics editor.
