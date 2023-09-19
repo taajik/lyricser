@@ -39,10 +39,10 @@ def create_lyrics_file(path, lyrics_path=None, recursive=False):
     # Each folder will generate a separate lyrics text.
     if recursive:
         for inner_path in inner_folders:
-            create_lyrics_file(inner_path, lyrics_path)
+            create_lyrics_file(inner_path, lyrics_path, recursive)
 
 
-def edit_lyrics(path):
+def edit_lyrics(path, recursive=False):
     """Write the lyrics to a text file and then
     read back the edited version to the song and save it.
     """
@@ -64,8 +64,12 @@ def edit_lyrics(path):
                 lyricstxt.write(lyrics)
 
             # Wait until edits are confirmed.
-            if input(file.name + " >< "):
-                break
+            try:
+                # Entering 'n' will skip this song.
+                if input(f"{file.name:<50}\t Edited? ") == "n":
+                    continue
+            except KeyboardInterrupt:
+                raise SystemExit
 
             # Read the edited lyrics from the editor file.
             with open("lyrics_editor.txt", "r", encoding="utf-8") as lyricstxt:
@@ -79,8 +83,9 @@ def edit_lyrics(path):
             inner_folders.append(file)
 
     # Call the function again for folders inside this one.
-    for inner_path in inner_folders:
-        edit_lyrics(inner_path)
+    if recursive:
+        for inner_path in inner_folders:
+            edit_lyrics(inner_path, recursive)
 
 
 def search_lyrics(path, q):

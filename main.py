@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     # Songs' lyrics editor.
     elif args.command == "edit":
-        edit_lyrics(origin_path)
+        edit_lyrics(origin_path, args.recursive)
 
     # Search for a phrase in lyrics files.
     elif args.command == "search":
