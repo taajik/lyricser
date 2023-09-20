@@ -40,12 +40,12 @@ add_common_arguments(edit_parser)
 
 search_parser = subparsers.add_parser("search", help="Search inside all lyrics files")
 add_common_arguments(search_parser)
+search_parser.add_argument("-q", "--search-query", nargs="+", dest="q_list", help="list of search phrases")
 
 
 if __name__ == "__main__":
 
     args = parser.parse_args()
-    # print(args)
 
     # Print help if the program is run without any arguments.
     if args.command is None:
@@ -90,11 +90,6 @@ if __name__ == "__main__":
 
     # Search for a phrase in lyrics files.
     elif args.command == "search":
-        q = input("Search phrase: ").lower()
-        print()
-        if len(q) < 3:
-            print(" X It's too short (three characters minimum)")
-        else:
-            search_lyrics(origin_path, q)
+        search_lyrics(origin_path, args.q_list, args.recursive)
 
     print()

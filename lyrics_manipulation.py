@@ -88,11 +88,11 @@ def edit_lyrics(path, recursive=False):
             edit_lyrics(inner_path, recursive)
 
 
-def search_lyrics(path, q):
-    """Search for a phrase in all of the lyrics files
-    inside the entered folder.
+def search_lyrics(path, q_list, recursive=False):
+    """Search for a list of phrases in all of the lyrics files
+    inside the specified folder.
 
-    The results lists the song and file names that include the phrase.
+    The result lists the song and file names that include all of the phrases.
     """
 
     inner_folders = []
@@ -107,14 +107,17 @@ def search_lyrics(path, q):
             # Split the full lyrics file into separate song lyrics.
             lyrics = lyrics.split("─" * 120)[1:-1]
 
+            # For each match, print the song name
             for song in lyrics:
-                if q in song.lower():
-                    # For each match, print the song name
-                    print(file.name, song.splitlines()[2])
+                # Every search phrase should be present in this song.
+                if all([q.lower() in song.lower() for q in q_list]):
+                    print(f"{file.name.strip(' (Lyrics).txt'):<40}"
+                            f"\t {song.splitlines()[2]}")
 
         elif file.is_dir():
             inner_folders.append(file)
 
     # Call the function again for folders inside this one.
-    for inner_path in inner_folders:
-        search_lyrics(inner_path, q)
+    if recursive:
+        for inner_path in inner_folders:
+            search_lyrics(inner_path, q_list, recursive)
