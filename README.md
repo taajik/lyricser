@@ -4,14 +4,11 @@
 ![Windows Support](https://img.shields.io/badge/Windows-Support-brightgreen.svg)
 
 
-> :construction: Work in progress!
-
 These scripts are for dealing with lyrics of songs. Automatically adding lyrics to songs, editing lyrics, reading lyrics and more.
 
 
 ## Features
 - Using Genius API, you can add lyrics to your songs and albums easily.
-- But there is no need for a Genius access token.
 - You can add lyrics to musics in nested folders at once.
 - You can have lyrics of albums in a text file.
 - You can search through all of your lyrics files.
@@ -19,13 +16,20 @@ These scripts are for dealing with lyrics of songs. Automatically adding lyrics 
 - Support for MP3 and M4A formats.
 
 
-## Requirements and Run
+## Run
 It's written in python 3.6, but maybe with some modifications you can run it on python 2.
-First you need to install required packages.
+
+For fetching the lyrics from Genius.com and adding them to your songs (`./lyricser set -h`),
+you need an API token, which you can get from [Genius](https://genius.com/api-clients).
+Then you need to set it as an environment variable:
 ```
-pip install -r requirements.txt
+export API_TOKEN=YOUR_API_KEY
+
+# or on Windows:
+set API_TOKEN=YOUR_API_KEY
 ```
-And then you can run it.
+And then you can run it:
 ```
-python main.py
+./lyricser --help
 ```
+Note that you don't need an API key to work with options other than '_set_'.
