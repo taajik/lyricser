@@ -1,5 +1,6 @@
 
 import argparse
+import json
 import os
 
 from lyricsgenius import Genius
@@ -14,33 +15,79 @@ from lyrics_manipulation import (
 import utils
 
 
-parser = argparse.ArgumentParser(description="Edit and add lyrics to your songs.")
+# All instructional texts for parsers are stored in this file:
+with open("instructions.json") as insts:
+    ts = json.load(insts)
+
+parser = argparse.ArgumentParser(
+    prog="lyricser",
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=ts["parser"]["desc"]
+)
 subparsers = parser.add_subparsers(title="Commands", dest="command", metavar="")
 
-def add_common_arguments(parser):
+def add_common_arguments(parser, **helps):
+    # These common arguments are needed for all of the parsres.
+    # But the help messages can be customized.
     parser.add_argument("-r", "--recursive", action="store_true",
-                        help="recursive files search from provided root path")
-    parser.add_argument("path", type=str)
+                        help=helps.get("recursive", ts["common"]["recursive"]))
+    parser.add_argument("path", type=str,
+                        help=helps.get("path", ts["common"]["path"]))
 
-regularize_parser = subparsers.add_parser("regular", help="Auto regularize songs")
-add_common_arguments(regularize_parser)
-regularize_parser.add_argument("-a", "--auto-names", action="store_true", help="extract artist and album names from the folder's name")
-regularize_parser.add_argument("-n", "--no-rename", action="store_false", dest="rename", help="do not change songs' file names (only edit tags)")
+regular_parser = subparsers.add_parser(
+    "regular",
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=ts["regular"]["desc"],
+    epilog=ts["regular"]["epil"],
+    help=ts["regular"]["help"]
+)
+add_common_arguments(regular_parser)
+regular_parser.add_argument("-a", "--auto-names", action="store_true",
+                            help=ts["regular"]["args"]["auto_names"])
+regular_parser.add_argument("-n", "--no-rename",
+                            action="store_false", dest="rename",
+                            help=ts["regular"]["args"]["rename"])
 
-set_parser = subparsers.add_parser("set", help="Add lyrics to songs")
+set_parser = subparsers.add_parser(
+    "set",
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=ts["set"]["desc"],
+    epilog=ts["set"]["epil"],
+    help=ts["set"]["help"]
+)
 add_common_arguments(set_parser)
-set_parser.add_argument("-i", "--is-album", action="store_true", help="consider all songs in a folder as an album")
+set_parser.add_argument("-i", "--is-album", action="store_true",
+                        help=ts["set"]["args"]["is_album"])
 
-create_parser = subparsers.add_parser("create", help="Create lyrics files from lyrics of songs")
+create_parser = subparsers.add_parser(
+    "create",
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=ts["create"]["desc"],
+    epilog=ts["create"]["epil"],
+    help=ts["create"]["help"]
+)
 add_common_arguments(create_parser)
-create_parser.add_argument("-o", "--output-path", dest="lyrics_path", help="store location of lyrics files")
+create_parser.add_argument("-o", "--output-path", dest="lyrics_path",
+                           help=ts["create"]["args"]["lyrics_path"])
 
-edit_parser = subparsers.add_parser("edit", help="Edit lyrics of songs")
+edit_parser = subparsers.add_parser(
+    "edit",
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=ts["edit"]["desc"],
+    epilog=ts["edit"]["epil"],
+    help=ts["edit"]["help"]
+)
 add_common_arguments(edit_parser)
 
-search_parser = subparsers.add_parser("search", help="Search inside all lyrics files")
-add_common_arguments(search_parser)
-search_parser.add_argument("-q", "--search-query", nargs="+", dest="q_list", help="list of search phrases")
+search_parser = subparsers.add_parser(
+    "search",
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description=ts["search"]["desc"],
+    help=ts["search"]["help"]
+)
+add_common_arguments(search_parser, path=ts["search"]["args"]["path"])
+search_parser.add_argument("-q", nargs="+", dest="q_list", metavar="phrase",
+                           help=ts["search"]["args"]["q_list"])
 
 
 if __name__ == "__main__":
@@ -70,7 +117,7 @@ if __name__ == "__main__":
     elif args.command == "set":
         # genius = Genius(excluded_terms=["(Live)", "(Remix)"])
         genius = Genius(os.environ.get("API_TOKEN"), verbose=False)
-        album = auto_add_lyrics(origin_path, genius, args.recursive, args.is_album)
+        auto_add_lyrics(origin_path, genius, args.recursive, args.is_album)
         utils.print_report("added", "not added")
 
     # For each folder, generate a text file containing all of its lyrics.

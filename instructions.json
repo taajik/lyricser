@@ -1,0 +1,56 @@
+{
+    "parser": {
+        "desc": "Edit and add lyrics to your songs."
+    },
+
+    "common": {
+        "recursive": "recursive files search from provided root path",
+        "path": "the full path to songs' root folder"
+    },
+
+    "regular": {
+        "help": "Auto regularize songs",
+        "desc": "Set file name and some tags of songs. \nThe artist and folder names should either be provided manually for each folder, \nor they can be gathered from the folder's name automatically (-a or --auto-names). \nTags that will be edited are: Title, Album Artist, Album & Track Number. \n",
+        "epil": "If --auto-names option is provided, the folder's name \nshould be in one of these formats (without quotes): \n for an album: 'artist - album' \n for an artist's songs: 'artist' \nAccording to the default behavior (without --no-rename) the new file name \nof a song will be composed using the title, artist, and track number. \nIf other collaborators of the song are listed in the artist tag (separated by comma) \nyou will be prompted to choose how they should be included in the file name. \nExample: 01 Under Pressure_Queen_David Bowie (Remastered 2011).mp3",
+        "args": {
+            "auto_names": "extract artist and album names from the folder's name",
+            "rename": "do not change songs' file names (only edit tags)"
+        }
+    },
+
+    "set": {
+        "help": "Add lyrics to songs",
+        "desc": "Lyrics will be searched for and added to all songs inside the specified folder.",
+        "epil": "If you verify that each folder contains a single album (-i or --is-album), \nthe name of the folder will be used to search for the album in Genius; \nbut it should be in this format: 'artist - album'.",
+        "args": {
+            "is_album": "consider all songs in a folder as an album"
+        }
+    },
+
+    "create": {
+        "help": "Create lyrics files from lyrics of songs",
+        "desc": "For each folder, a text file containing lyrics of its songs will be generated.",
+        "epil": "You can provide a path for storing these text files. If you don't specify one, \neach lyrics file will be placed in the folder, next to the songs.",
+        "args": {
+            "lyrics_path": "store location of lyrics files"
+        }
+    },
+
+    "edit": {
+        "help": "Edit lyrics of songs",
+        "desc": "One by one, the lyrics of the songs will be written down \nin the 'lyrics_editor.txt' file and you can edit them manually.",
+        "epil": "You should open the file and edit the lyrics as you want. \nAfter you are done, save the file and press enter in the terminal \nto update the song and move on to the next one. \nIf you want to skip a song, enter 'n' into the prompt.",
+        "args": {
+        }
+    },
+
+    "search": {
+        "help": "Search inside all lyrics files",
+        "desc": "All lyrics files in the specified folder will be searched for songs that include all of the phrases.",
+        "epil": "",
+        "args": {
+            "path": "the full path to the root folder containing lyrics text files",
+            "q_list": "list of search phrases"
+        }
+    }
+}

@@ -103,14 +103,14 @@ def search_lyrics(path, q_list, recursive=False):
                 continue
 
             with open(file, "r", encoding="utf-8") as txt_file:
-                lyrics = txt_file.read()
+                lyrics = txt_file.read().lower()
             # Split the full lyrics file into separate song lyrics.
             lyrics = lyrics.split("─" * 120)[1:-1]
 
             # For each match, print the song name
             for song in lyrics:
                 # Every search phrase should be present in this song.
-                if all([q.lower() in song.lower() for q in q_list]):
+                if all([q.lower() in song for q in q_list]):
                     print(f"{file.name.strip(' (Lyrics).txt'):<40}"
                             f"\t {song.splitlines()[2]}")
 
