@@ -24,7 +24,7 @@ def report(is_successful, message=""):
 
 def print_report(suc_title, unsuc_title):
     print(
-        f"\n\n\n {suc_title}: {successful}",
+        f"\n\n\n {suc_title}: {successful}"
         f"\n {unsuc_title}: {unsuccessful}"
     )
 
