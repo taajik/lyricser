@@ -1,4 +1,5 @@
 
+import os
 import unittest
 from unittest.mock import patch
 
@@ -72,6 +73,44 @@ class ReportTest(unittest.TestCase):
             mocked_print.assert_called_with(
                 f"\n\n\n {suc_title}: 2\n {unsuc_title}: 1"
             )
+
+
+class FormatPathTest(unittest.TestCase):
+    """test class for format_path function"""
+
+    def test_basic_path(self):
+        raw_p = "/fake_dir/for/test/2"
+        p = str(utils.format_path(raw_p))
+        self.assertEqual(raw_p, p)
+
+    def test_basic_path_with_tilde(self):
+        raw_p = "~/fake_dir/for/test/2"
+        p = str(utils.format_path(raw_p))
+        self.assertEqual(os.path.expanduser(raw_p), p)
+
+    def test_empty_path(self):
+        p = utils.format_path("")
+        self.assertEqual(os.path.realpath(""), str(p))
+
+    def test_dot_path(self):
+        p = utils.format_path(".")
+        self.assertEqual(os.path.realpath("."), str(p))
+
+    def test_single_quoted_path(self):
+        p = utils.format_path("'/fake/dir/for/test/2'")
+        self.assertEqual("/fake/dir/for/test/2", str(p))
+
+    def test_double_quoted_path(self):
+        p = utils.format_path('"/fake/dir/for/test/2"')
+        self.assertEqual('/fake/dir/for/test/2', str(p))
+
+    def test_path_with_escaped_quote(self):
+        p = utils.format_path("/Musics/Metallica/06 Don'\\''t Tread On Me_Metallica.mp3")
+        self.assertEqual("/Musics/Metallica/06 Don't Tread On Me_Metallica.mp3", str(p))
+
+    def test_complex_path(self):
+        p = utils.format_path("   \"''~/songs 2/Mega'\\''deth/01 The Sick, The Dying… And The Dead!_Megadeth.mp3\"' ")
+        self.assertEqual(os.path.expanduser("~/songs 2/Mega'deth/01 The Sick, The Dying… And The Dead!_Megadeth.mp3"), str(p))
 
 
 
