@@ -1,6 +1,7 @@
 
 import eyed3
 from mutagen.mp4 import MP4
+from mutagen.flac import FLAC
 
 
 class MP3Song:
@@ -144,7 +145,84 @@ class M4ASong:
         self.tags["\xa9lyr"] = [l]
 
     def save(self):
-        self.tags.save(self.path)
+        self.song.save(self.path)
+
+
+class FLACSong:
+    def __init__(self, path) -> None:
+        self.format = "flac"
+        self.path = path
+        self.song = FLAC(path)
+        self.tags = self.song.tags
+
+    def _get_tag(self, tag):
+        t = self.tags.get(tag)
+        if t:
+            return t[0]
+        else:
+            return None
+
+    @property
+    def title(self):
+        return self._get_tag("title")
+
+    @title.setter
+    def title(self, t):
+        self.tags["title"] = [t]
+
+    @property
+    def artists(self):
+        return self._get_tag("artist")
+
+    @artists.setter
+    def artists(self, a):
+        if isinstance(a, list):
+            a = ", ".join(a)
+        self.tags["artist"] = [a]
+
+    @property
+    def album_artist(self):
+        return self._get_tag("albumartist")
+
+    @album_artist.setter
+    def album_artist(self, aa):
+        self.tags["albumartist"] = [aa]
+
+    @property
+    def album(self):
+        return self._get_tag("album")
+
+    @album.setter
+    def album(self, a):
+        self.tags["album"] = [a]
+
+    @property
+    def track_num(self):
+        tn = self._get_tag("tracknumber")
+        if tn:
+            return tn.split('/')[0]
+        return tn
+
+    @track_num.setter
+    def track_num(self, tn):
+        if tn is not None:
+            self.tags["tracknumber"] = [tn]
+        elif "tracknumber" in self.tags:
+            del self.tags["tracknumber"]
+
+    @property
+    def lyrics(self):
+        l = self._get_tag("lyrics")
+        if l is None:
+            return ""
+        return l
+
+    @lyrics.setter
+    def lyrics(self, l):
+        self.tags["lyrics"] = [l]
+
+    def save(self):
+        self.song.save(self.path)
 
 
 class Song:
@@ -154,6 +232,8 @@ class Song:
             return MP3Song(path)
         elif ext == ".m4a":
             return M4ASong(path)
+        elif ext == ".flac":
+            return FLACSong(path)
         else:
             raise Exception(
                 " X Not supported file format: " + path.name

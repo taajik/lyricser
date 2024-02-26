@@ -36,7 +36,7 @@ def format_path(path):
 
 
 def is_valid_dir(path):
-    if (path in ["", "/", "."]
+    if (not isinstance(path, Path)
         or not path.is_dir()
         or path.samefile("/")
         or path.samefile(Path())
