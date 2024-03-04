@@ -13,7 +13,7 @@ These scripts are for dealing with lyrics of songs. Automatically adding lyrics 
 - You can have lyrics of albums in a text file.
 - You can search through all of your lyrics files.
 - Also, you can read lyrics of a song in a text file, edit it and then save it back to the song file.
-- Support for MP3 and M4A formats.
+- Support for MP3, M4A and FLAC formats.
 
 
 ## Run
