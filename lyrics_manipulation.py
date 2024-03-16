@@ -65,8 +65,8 @@ def edit_lyrics(path, recursive=False):
 
             # Wait until edits are confirmed.
             try:
-                # Entering 'n' will skip this song.
-                if input(f"{file.name:<50}\t Edited? ") == "n":
+                # Skipping this song.
+                if input(f"{file.name:<50}\t Edited? ").lower() != "y":
                     continue
             except KeyboardInterrupt:
                 raise SystemExit

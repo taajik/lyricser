@@ -39,7 +39,7 @@
     "edit": {
         "help": "Edit lyrics of songs",
         "desc": "One by one, the lyrics of the songs will be written down \nin the 'lyrics_editor.txt' file and you can edit them manually.",
-        "epil": "You should open the file and edit the lyrics as you want. \nAfter you are done, save the file and press enter in the terminal \nto update the song and move on to the next one. \nIf you want to skip a song, enter 'n' into the prompt.",
+        "epil": "You should open the file and edit the lyrics as you want. \nAfter you are done, save the file and enter 'y' into the prompt \nto update the song and move on to the next one. \nIf you want to skip a song, just press enter in the terminal.",
         "args": {
         }
     },
