@@ -65,7 +65,10 @@ class MP3Song:
 
     @lyrics.setter
     def lyrics(self, l):
-        self.tags.lyrics.set(l)
+        if any(l):
+            self.tags.lyrics[0].text = l
+        else:
+            self.tags.lyrics.set(l)
 
     def save(self):
         self.tags.save(version=eyed3.id3.ID3_V2_4, encoding="utf8")

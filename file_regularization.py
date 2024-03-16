@@ -18,7 +18,7 @@ def get_file_name(song: Song):
 
     # Find other artists from the 'artists' tag.
     artists = song.artists.replace("/", ", ").split(", ")
-    artists = [a for a in artists if a.casefold() != song.album_artist.casefold()]
+    artists = [a.strip() for a in artists if a.casefold() != song.album_artist.casefold()]
     if artists:
         print(" Collaborator artists found:", artists)
         set_as_feat = input("  Set as featured? (Y or n): ").lower()

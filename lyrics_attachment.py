@@ -9,9 +9,11 @@ def format_lyrics(lyrics: str):
     """Format the lyrics from the Genius for adding them to songs."""
 
     lyrics = lyrics.replace("[?]", "")
+    lyrics = re.sub("^.*Lyrics", "", lyrics)
     lyrics = re.sub("\n*\[", "\n\n[", lyrics)
-    lyrics = re.sub("^.*\n", "", lyrics)
+    lyrics = lyrics.replace("\n\n\n", "\n\n")
     lyrics = lyrics.replace("’", "'").replace(" ", " ").strip()
+    lyrics = lyrics.replace("You might also like", "")
     lyrics = re.sub("\d*Embed$", "", lyrics)
     return lyrics
 
@@ -32,7 +34,9 @@ def get_song_lyrics(t, aa, genius):
 
     try:
         # lyrics = genius.lyrics( input(f"{t} - {aa}\n  url: ") )
-        lyrics = genius.search_song(t, aa, get_full_info=False).lyrics
+        song = genius.search_song(t, aa, get_full_info=False)
+        print(song.path)
+        lyrics = song.lyrics
     except KeyboardInterrupt:
         raise SystemExit
 
@@ -50,7 +54,10 @@ def auto_add_lyrics(path, genius, recursive=False, is_album=False):
         if len(folder) == 2:
             try:
                 print(" Searching for album lyrics...")
-                album = genius.search_album(folder[1], folder[0], get_full_info=False)
+                # album = genius.search_album(album_id=, get_full_info=False)
+                album = genius.search_album(folder[1], folder[0],
+                                            get_full_info=False)
+                print(album.url)
             except KeyboardInterrupt:
                 raise SystemExit
 
