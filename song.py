@@ -65,7 +65,7 @@ class MP3Song:
 
     @lyrics.setter
     def lyrics(self, l):
-        if any(l):
+        if any(self.tags.lyrics):
             self.tags.lyrics[0].text = l
         else:
             self.tags.lyrics.set(l)
