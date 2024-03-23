@@ -31,6 +31,8 @@ def add_common_arguments(parser, **helps):
     # But the help messages can be customized.
     parser.add_argument("-r", "--recursive", action="store_true",
                         help=helps.get("recursive", ts["common"]["recursive"]))
+    parser.add_argument("-I", "--ignore", metavar="PATTERN", type=str,
+                        help=helps.get("ignore", ts["common"]["ignore"]))
     parser.add_argument("path", type=str,
                         help=helps.get("path", ts["common"]["path"]))
 
@@ -110,14 +112,16 @@ if __name__ == "__main__":
 
     # Regularize songs' tags and filename
     if args.command == "regular":
-        auto_regularize(origin_path, args.recursive, args.auto_names, args.rename)
+        auto_regularize(origin_path, args.recursive, args.ignore,
+                        args.auto_names, args.rename)
         utils.print_report("modified", "not modified")
 
     # Search for lyrics in 'Genius.com' and add them to songs.
     elif args.command == "set":
         # genius = Genius(excluded_terms=["(Live)", "(Remix)"])
         genius = Genius(os.environ.get("API_TOKEN"), verbose=False)
-        auto_add_lyrics(origin_path, genius, args.recursive, args.is_album)
+        auto_add_lyrics(origin_path, genius, args.recursive,
+                        args.ignore,args.is_album)
         utils.print_report("added", "not added")
 
     # For each folder, generate a text file containing all of its lyrics.
@@ -128,15 +132,16 @@ if __name__ == "__main__":
             if not utils.is_valid_dir(lyrics_path):
                 print(" X Error: Invalid lyrics path!")
                 raise SystemExit
-        create_lyrics_file(origin_path, lyrics_path, args.recursive)
+        create_lyrics_file(origin_path, lyrics_path,
+                           args.recursive, args.ignore)
         utils.print_report("created", "not created")
 
     # Songs' lyrics editor.
     elif args.command == "edit":
-        edit_lyrics(origin_path, args.recursive)
+        edit_lyrics(origin_path, args.recursive, args.ignore)
 
     # Search for a phrase in lyrics files.
     elif args.command == "search":
-        search_lyrics(origin_path, args.q_list, args.recursive)
+        search_lyrics(origin_path, args.q_list, args.recursive, args.ignore)
 
     print()

@@ -1,4 +1,5 @@
 
+import fnmatch
 import re
 
 from song import Song
@@ -43,7 +44,8 @@ def get_song_lyrics(t, aa, genius):
     return lyrics
 
 
-def auto_add_lyrics(path, genius, recursive=False, is_album=False):
+def auto_add_lyrics(path, genius, recursive=False, ignore_ptrn=None,
+                    is_album=False):
     """Loop through the songs in one folder and add lyrics to them."""
 
     print(get_header(path))
@@ -63,6 +65,8 @@ def auto_add_lyrics(path, genius, recursive=False, is_album=False):
 
     i = 0
     for file in sorted(path.iterdir()):
+        if ignore_ptrn and fnmatch.fnmatch(file.name, ignore_ptrn):
+            continue
         if file.is_file():
             i += 1
             print("\n" + str(i).rjust(3), end=". ")
@@ -103,4 +107,5 @@ def auto_add_lyrics(path, genius, recursive=False, is_album=False):
     # Call the function again for folders inside this one.
     if recursive:
         for inner_path in inner_folders:
-            auto_add_lyrics(inner_path, genius, recursive, is_album)
+            auto_add_lyrics(inner_path, genius, recursive,
+                            ignore_ptrn, is_album)

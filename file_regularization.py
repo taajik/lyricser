@@ -1,4 +1,5 @@
 
+import fnmatch
 import re
 
 from song import Song
@@ -34,7 +35,8 @@ def get_file_name(song: Song):
     return new_file.strip()
 
 
-def auto_regularize(path, recursive=False, auto_names=False, rename=True):
+def auto_regularize(path, recursive=False, ignore_ptrn=None,
+                    auto_names=False, rename=True):
     """Automatically edit file name and some tags of songs."""
 
     print(get_header(path))
@@ -56,6 +58,8 @@ def auto_regularize(path, recursive=False, auto_names=False, rename=True):
     album = album.strip()
 
     for file in path.iterdir():
+        if ignore_ptrn and fnmatch.fnmatch(file.name, ignore_ptrn):
+            continue
         if file.is_file():
             print(file.name)
             try:
@@ -91,4 +95,5 @@ def auto_regularize(path, recursive=False, auto_names=False, rename=True):
     # Call the function again for folders inside this one.
     if recursive:
         for inner_path in inner_folders:
-            auto_regularize(inner_path, recursive, auto_names, rename)
+            auto_regularize(inner_path, recursive, ignore_ptrn,
+                            auto_names, rename)

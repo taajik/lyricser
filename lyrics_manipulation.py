@@ -1,9 +1,12 @@
 
+import fnmatch
+
 from song import Song
 from utils import report, get_header
 
 
-def create_lyrics_file(path, lyrics_path=None, recursive=False):
+def create_lyrics_file(path, lyrics_path=None,
+                       recursive=False, ignore_ptrn=None):
     """Generate a text containing lyrics of all the songs in a folder."""
 
     lyrics_file = path
@@ -18,6 +21,8 @@ def create_lyrics_file(path, lyrics_path=None, recursive=False):
     else:
         # Add the lyrics of every file in this folder to 'lyrics'.
         for file in sorted(path.iterdir()):
+            if ignore_ptrn and fnmatch.fnmatch(file.name, ignore_ptrn):
+                continue
             if file.is_file():
                 lyrics += f"\n\n{'─'*120}\n\n  {file.stem}\n\n\n"
                 try:
@@ -39,10 +44,10 @@ def create_lyrics_file(path, lyrics_path=None, recursive=False):
     # Each folder will generate a separate lyrics text.
     if recursive:
         for inner_path in inner_folders:
-            create_lyrics_file(inner_path, lyrics_path, recursive)
+            create_lyrics_file(inner_path, lyrics_path, recursive, ignore_ptrn)
 
 
-def edit_lyrics(path, recursive=False):
+def edit_lyrics(path, recursive=False, ignore_ptrn=None):
     """Write the lyrics to a text file and then
     read back the edited version to the song and save it.
     """
@@ -51,6 +56,8 @@ def edit_lyrics(path, recursive=False):
     inner_folders = []
 
     for file in sorted(path.iterdir()):
+        if ignore_ptrn and fnmatch.fnmatch(file.name, ignore_ptrn):
+            continue
         if file.is_file():
             try:
                 song = Song(file)
@@ -66,7 +73,7 @@ def edit_lyrics(path, recursive=False):
             # Wait until edits are confirmed.
             try:
                 # Skipping this song.
-                if input(f"{file.name:<50}\t Edited? ").lower() != "y":
+                if not input(f"{file.name:<50}\t Edited? ").lower().startswith("y"):
                     continue
             except KeyboardInterrupt:
                 raise SystemExit
@@ -85,10 +92,10 @@ def edit_lyrics(path, recursive=False):
     # Call the function again for folders inside this one.
     if recursive:
         for inner_path in inner_folders:
-            edit_lyrics(inner_path, recursive)
+            edit_lyrics(inner_path, recursive, ignore_ptrn)
 
 
-def search_lyrics(path, q_list, recursive=False):
+def search_lyrics(path, q_list, recursive=False, ignore_ptrn=None):
     """Search for a list of phrases in all of the lyrics files
     inside the specified folder.
 
@@ -98,6 +105,8 @@ def search_lyrics(path, q_list, recursive=False):
     inner_folders = []
 
     for file in sorted(path.iterdir()):
+        if ignore_ptrn and fnmatch.fnmatch(file.name, ignore_ptrn):
+            continue
         if file.is_file():
             if file.suffix.lower() != ".txt":
                 continue
@@ -111,7 +120,7 @@ def search_lyrics(path, q_list, recursive=False):
             for song in lyrics:
                 # Every search phrase should be present in this song.
                 if all([q.lower() in song for q in q_list]):
-                    print(f"{file.name.strip(' (Lyrics).txt'):<40}"
+                    print(f"{file.name.removesuffix(' (Lyrics).txt'):<40}"
                             f"\t {song.splitlines()[2]}")
 
         elif file.is_dir():
@@ -120,4 +129,4 @@ def search_lyrics(path, q_list, recursive=False):
     # Call the function again for folders inside this one.
     if recursive:
         for inner_path in inner_folders:
-            search_lyrics(inner_path, q_list, recursive)
+            search_lyrics(inner_path, q_list, recursive, ignore_ptrn)

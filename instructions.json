@@ -5,6 +5,7 @@
 
     "common": {
         "recursive": "recursive files search from provided root path",
+        "ignore": "exclude entries matching shell PATTERN",
         "path": "the full path to songs' root folder"
     },
 

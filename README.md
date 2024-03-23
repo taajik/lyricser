@@ -17,10 +17,11 @@ These scripts are for dealing with lyrics of songs. Automatically adding lyrics 
 
 
 ## Run
-It's written in python 3.6, but maybe with some modifications you can run it on python 2.
-
 For fetching the lyrics from Genius.com and adding them to your songs (`./lyricser set -h`),
 you need an API token, which you can get from [Genius](https://genius.com/api-clients).
+
+> Note that you don't need an API key to work with options other than '_set_'.
+
 Then you need to set it as an environment variable:
 ```
 export API_TOKEN=YOUR_API_KEY
@@ -32,4 +33,3 @@ And then you can run it:
 ```
 ./lyricser --help
 ```
-Note that you don't need an API key to work with options other than '_set_'.
