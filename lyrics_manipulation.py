@@ -2,7 +2,7 @@
 import fnmatch
 
 from song import Song
-from utils import report, get_header
+from utils import report, get_header, format_lyrics
 
 
 def create_lyrics_file(path, lyrics_path=None,
@@ -83,6 +83,7 @@ def edit_lyrics(path, recursive=False, ignore_ptrn=None):
                 lyrics = lyricstxt.read().strip()
 
             # Add the new lyrics to the song and save it.
+            lyrics = format_lyrics(lyrics)
             song.lyrics = lyrics
             song.save()
 

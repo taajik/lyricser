@@ -1,5 +1,6 @@
 
 from pathlib import Path
+import re
 
 
 # Number of
@@ -53,3 +54,17 @@ def get_header(path, full_path=True):
     return (f"\n┌─{'─'*len(title)}─┐" +
             f"\n│ {title} │ {files_num}" +
             f"\n└─{'─'*len(title)}─┘")
+
+
+def format_lyrics(lyrics: str):
+    """Tidy up the lyrics befor adding them to songs."""
+
+    lyrics = lyrics.replace("[?]", "")
+    lyrics = lyrics.replace("You might also like", "")
+    lyrics = re.sub("^.*Lyrics", "", lyrics)
+    lyrics = re.sub("See [\w ]+ LiveGet tickets as low as \$\d*", "", lyrics)
+    lyrics = re.sub("\n*\[", "\n\n[", lyrics).strip()
+    lyrics = lyrics.replace("\n\n\n", "\n\n")
+    lyrics = lyrics.replace("’", "'").replace(" ", " ")
+    lyrics = re.sub("\d*Embed$", "", lyrics)
+    return lyrics

@@ -3,20 +3,7 @@ import fnmatch
 import re
 
 from song import Song
-from utils import report, get_header
-
-
-def format_lyrics(lyrics: str):
-    """Format the lyrics from the Genius for adding them to songs."""
-
-    lyrics = lyrics.replace("[?]", "")
-    lyrics = re.sub("^.*Lyrics", "", lyrics)
-    lyrics = re.sub("\n*\[", "\n\n[", lyrics)
-    lyrics = lyrics.replace("\n\n\n", "\n\n")
-    lyrics = lyrics.replace("’", "'").replace(" ", " ").strip()
-    lyrics = lyrics.replace("You might also like", "")
-    lyrics = re.sub("\d*Embed$", "", lyrics)
-    return lyrics
+from utils import report, get_header, format_lyrics
 
 
 def get_song_lyrics(t, aa, genius):
