@@ -16,7 +16,7 @@ These scripts are for dealing with lyrics of songs. Automatically adding lyrics 
 - Support for MP3, M4A and FLAC formats.
 
 
-## Run
+## Setup
 For fetching the lyrics from Genius.com and adding them to your songs (`./lyricser set -h`),
 you need an API token, which you can get from [Genius](https://genius.com/api-clients).
 

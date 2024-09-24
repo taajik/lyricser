@@ -32,23 +32,26 @@ def get_song_lyrics(t, aa, genius):
 
 
 def auto_add_lyrics(path, genius, recursive=False, ignore_ptrn=None,
-                    is_album=False):
+                    is_album=False, is_album_prompted=False):
     """Loop through the songs in one folder and add lyrics to them."""
 
     print(get_header(path))
     inner_folders = []
 
-    if is_album:
+    if is_album or is_album_prompted:
         folder = path.name.split(" - ")
         if len(folder) == 2:
             try:
-                print(" Searching for album lyrics...")
+                print(" Searching for album lyrics...\n")
                 # album = genius.search_album(album_id=, get_full_info=False)
                 album = genius.search_album(folder[1], folder[0],
                                             get_full_info=False)
                 print(album.url)
             except KeyboardInterrupt:
                 raise SystemExit
+        if (is_album_prompted and
+                input(" Is this the right link? ").lower().startswith("n")):
+            return
 
     i = 0
     for file in sorted(path.iterdir()):
@@ -69,7 +72,7 @@ def auto_add_lyrics(path, genius, recursive=False, ignore_ptrn=None,
             # Get the lyrics of this song.
             success_msg = "Done."
             try:
-                if is_album:
+                if is_album or is_album_prompted:
                     trk = album.tracks[i].song
                     # Make sure the correct lyrics is being put on the song.
                     if trk.title.replace("’", "'").casefold() != t.casefold():
@@ -100,4 +103,4 @@ def auto_add_lyrics(path, genius, recursive=False, ignore_ptrn=None,
     if recursive:
         for inner_path in inner_folders:
             auto_add_lyrics(inner_path, genius, recursive,
-                            ignore_ptrn, is_album)
+                            ignore_ptrn, is_album, is_album_prompted)

@@ -24,7 +24,8 @@
         "desc": "Lyrics will be searched for and added to all songs inside the specified folder.",
         "epil": "If you verify that each folder contains a single album (-i or --is-album), \nthe name of the folder will be used to search for the album in Genius; \nbut it should be in this format: 'artist - album'.",
         "args": {
-            "is_album": "consider all songs in a folder as an album"
+            "is_album": "consider all songs in a folder as an album",
+            "is_album_prompted": "prompted version of --is-album"
         }
     },
 

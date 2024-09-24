@@ -60,6 +60,8 @@ set_parser = subparsers.add_parser(
 add_common_arguments(set_parser)
 set_parser.add_argument("-i", "--is-album", action="store_true",
                         help=ts["set"]["args"]["is_album"])
+set_parser.add_argument("-a", "--is-album-prompted", action="store_true",
+                        help=ts["set"]["args"]["is_album_prompted"])
 
 create_parser = subparsers.add_parser(
     "create",
@@ -119,9 +121,9 @@ if __name__ == "__main__":
     # Search for lyrics in 'Genius.com' and add them to songs.
     elif args.command == "set":
         # genius = Genius(excluded_terms=["(Live)", "(Remix)"])
-        genius = Genius(os.environ.get("API_TOKEN"), verbose=False)
+        genius = Genius(os.environ.get("API_TOKEN"), verbose=False, retries=2)
         auto_add_lyrics(origin_path, genius, args.recursive,
-                        args.ignore,args.is_album)
+                        args.ignore, args.is_album, args.is_album_prompted)
         utils.print_report("added", "not added")
 
     # For each folder, generate a text file containing all of its lyrics.
